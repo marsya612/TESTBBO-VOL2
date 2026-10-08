@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BBO - Payment Processing</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    /* ===================== CSS BERSAMA ===================== */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', Arial, Helvetica, sans-serif;
+      color: #000;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    ul,
+    ol {
+      list-style: none;
+    }
+
+    button {
+      font-family: inherit;
+      background: none;
+      border: none;
+      color: inherit;
+      cursor: pointer;
+    }
+
+    [hidden] {
+      display: none !important;
+    }
+
+    .container {
+      width: 90%;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .placeholder {
+      background-color: #d9d9d9;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #b3b3b3;
+    }
+
+    /* tombol abu-abu panjang (Check the payment status / Done) */
+    .btn-main {
+      display: block;
+      width: 100%;
+      padding: 16px 20px;
+      background: #999;
+      color: #fff;
+      border-radius: 40px;
+      font-size: 16px;
+      font-weight: 700;
+      text-align: center;
+      transition: background 0.2s;
+    }
+
+    .btn-main:hover {
+      background: #777;
+    }
+
+    .btn-main:disabled {
+      background: #c9c9c9;
+      cursor: not-allowed;
+    }
+
+    /* ===================== CSS KHUSUS HALAMAN INI ===================== */
+    .status {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 40px 0;
+    }
+
+    .status-head {
+      text-align: center;
+      padding-bottom: 26px;
+    }
+
+    .status-head h1 {
+      font-size: 24px;
+      font-weight: 700;
+    }
+
+    .order-label {
+      margin-top: 8px;
+      font-size: 17px;
+      font-weight: 500;
+      color: #999;
+    }
+
+    .order-id {
+      font-size: 17px;
+      font-weight: 700;
+      color: #999;
+      word-break: break-all;
+    }
+
+    .status-body {
+      text-align: center;
+      padding: 44px 0 40px;
+    }
+
+    .status-text {
+      font-size: 20px;
+      line-height: 1.5;
+    }
+
+    .status-text strong {
+      display: block;
+      margin-top: 6px;
+      font-weight: 800;
+    }
+
+    @media (min-width: 1024px) {
+      .status-head h1 {
+        font-size: 36px;
+      }
+
+      .order-label,
+      .order-id {
+        font-size: 28px;
+      }
+
+      .status-body {
+        padding: 70px 0 60px;
+      }
+
+      .status-text {
+        font-size: 32px;
+      }
+
+      .btn-main {
+        padding: 22px 20px;
+        font-size: 24px;
+      }
+    }
+
+    /* ---------- spinner ---------- */
+    .status-head {
+      border-bottom: 1px dashed #b3b3b3;
+    }
+
+    .spinner {
+      width: 150px;
+      height: 150px;
+      margin: 0 auto 36px;
+      animation: putar 2.4s linear infinite;
+    }
+
+    @keyframes putar {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .spinner {
+        animation: none;
+      }
+    }
+
+    @media (min-width: 1024px) {
+      .spinner {
+        width: 250px;
+        height: 250px;
+        margin-bottom: 60px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <main class="container status">
+    <div class="status-head">
+      <h1>Payment Status</h1>
+      <p class="order-label">Order ID</p>
+      <p class="order-id" id="orderId">BBO1363524029</p>
+    </div>
+
+    <div class="status-body">
+      <svg class="spinner" viewBox="0 0 250 250" aria-hidden="true">
+        <path d="M125 125 L125 4 A121 121 0 1 0 246 125 Z" fill="none" stroke="#777" stroke-width="1.5" stroke-dasharray="6 7"/>
+        <circle cx="125" cy="125" r="12" fill="#d9d9d9"/>
+      </svg>
+      <p class="status-text">Your transfer is processing</p>
+    </div>
+
+    <a href="donepayment.html" class="btn-main">Check the payment status</a>
+  </main>
+
+  <script>
+    // ---------- Order ID (diambil dari halaman buy ticket, kalau ada) ----------
+    try {
+      const order = JSON.parse(sessionStorage.getItem('bbo_order'));
+      if (order && order.orderId) {
+        document.getElementById('orderId').textContent = order.orderId;
+      }
+    } catch (err) {
+      // pakai contoh Order ID di atas
+    }
+  </script>
+
+</body>
+</html>
