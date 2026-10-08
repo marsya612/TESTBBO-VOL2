@@ -885,6 +885,14 @@
       text-decoration: underline;
     }
 
+    .form-error {
+      margin-top: 14px;
+      padding: 0 8px;
+      font-size: 14px;
+      font-weight: 600;
+      color: #d00;
+    }
+
     .btn-pay {
       display: block;
       width: 100%;
@@ -1442,6 +1450,7 @@
           </label>
         </div>
 
+        <p class="form-error" id="formError" role="alert" hidden>Pilih minimal 1 tiket sebelum membayar.</p>
         <button type="submit" class="btn-pay" id="btnPay" disabled>Pay now</button>
       </div>
 
@@ -1682,7 +1691,17 @@
     cekSyarat.addEventListener('change', aturTombolBayar);
 
     // ---------- kirim form ----------
-    // (sementara belum ke mana-mana, tinggal sambungkan ke pembayaran / backend nanti)
+    // data pesanan disimpan sementara di browser (sessionStorage), lalu pindah ke halaman Complete Payment
+    // (kalau nanti sudah ada backend, kirim data ini ke server di bagian sini)
+    const formError = document.getElementById('formError');
+
+    // sembunyikan pesan error kalau jumlah tiket diubah lagi
+    document.querySelectorAll('.step-btn').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        formError.hidden = true;
+      });
+    });
+
     document.getElementById('bookingForm').addEventListener('submit', function (e) {
       e.preventDefault();
 
@@ -1694,6 +1713,61 @@
         e.target.reportValidity();
         return;
       }
+
+      // kumpulkan tiket yang jumlahnya lebih dari 0
+      const tiket = [];
+      let total = 0;
+      document.querySelectorAll('.ticket-card').forEach(function (kartu) {
+        const qty = Number(kartu.querySelector('output').textContent);
+        if (qty > 0) {
+          const harga = Number(kartu.querySelector('.qty-price strong').textContent.replace(/\D/g, ''));
+          tiket.push({
+            nama: kartu.querySelector('.ticket-name').textContent.trim(),
+            qty: qty,
+            harga: harga
+          });
+          total += qty * harga;
+        }
+      });
+
+      if (!tiket.length) {
+        formError.hidden = false;
+        return;
+      }
+
+      // contoh nomor virtual account (nanti diganti dari backend)
+      const metodeDipilih = document.querySelector('input[name="payment"]:checked');
+      const vaContoh = {
+        bbopay: '8888 1234 5678 0000',
+        card: '4111 1111 1111 1111',
+        bca: '7777 8888 9999 0000',
+        mandiri: '8900 1234 5678 9000',
+        bni: '9880 1234 5678 9000',
+        bri: '8881 2345 6789 0000'
+      };
+
+      const order = {
+        orderId: 'BBO' + String(Math.floor(Math.random() * 9000000000) + 1000000000),
+        judul: 'Judul Events',
+        tiket: tiket,
+        total: total,
+        nama: document.getElementById('nama').value.trim(),
+        email: email.value.trim(),
+        kodeNegara: document.getElementById('kodeNegara').value,
+        telepon: document.getElementById('telepon').value.trim(),
+        metode: metodeDipilih.closest('.pay-opt').querySelector('.pay-name').textContent.trim(),
+        va: vaContoh[metodeDipilih.value]
+      };
+
+      try {
+        sessionStorage.setItem('bbo_order', JSON.stringify(order));
+        // batas waktu pembayaran: 10 menit dari sekarang
+        sessionStorage.setItem('bbo_deadline', String(Date.now() + 10 * 60 * 1000));
+      } catch (err) {
+        // kalau browser menolak penyimpanan, halaman berikutnya memakai data contoh
+      }
+
+      window.location.href = 'complete-payment.html';
     });
   </script>
 
