@@ -770,33 +770,77 @@
       margin-top: 50px;
     }
 
-    /* ---------- tampilan "See All Upcoming Events" (bagian dari halaman ini) ---------- */
-    .show-all .navbar {
-      background: #bbb;
+    /* ---------- popup "See All Upcoming Events" (halaman belakang tetap terlihat, digelapkan) ---------- */
+    body.modal-open {
+      overflow: hidden;
+    }
+
+    .overlay-all {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.65);
+      z-index: 140;
     }
 
     .panel {
+      position: fixed;
+      top: 90px;
+      bottom: 0;
+      left: 16px;
+      right: 16px;
+      display: flex;
+      flex-direction: column;
       background: #fff;
-      margin: 0 16px;
-      padding: 22px 0 30px;
+      padding: 22px 0 0;
       border-radius: 40px 40px 0 0;
-      position: relative;
-      z-index: 60;
+      z-index: 160;
     }
 
     .panel .section-label {
+      align-self: flex-start;
       margin-bottom: 0;
       padding: 10px 24px 10px 40px;
     }
 
+    .btn-close-all {
+      position: absolute;
+      top: 18px;
+      right: 22px;
+      width: 40px;
+      height: 40px;
+      border: 2px solid #000;
+      border-radius: 50%;
+      font-size: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
     .panel .search {
+      flex: none;
       margin: 24px auto 20px;
     }
 
+    .panel .container {
+      flex: 1;
+      min-height: 0;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .panel .tabs {
+      flex: none;
+    }
+
     .list-scroll {
-      max-height: 80vh;
+      flex: 1;
+      min-height: 0;
       overflow-y: auto;
       padding-right: 14px;
+      padding-bottom: 30px;
       scrollbar-width: thin;
       scrollbar-color: #b3b3b3 #e6e6e6;
     }
@@ -972,10 +1016,12 @@
         margin-top: 60px;
       }
 
-      /* tampilan "See All Upcoming Events": 2 kartu per baris */
+      /* popup "See All Upcoming Events": 2 kartu per baris */
       .panel {
-        margin: 0 28px;
-        padding: 30px 0 60px;
+        top: 100px;
+        left: 28px;
+        right: 28px;
+        padding: 30px 0 0;
         border-radius: 50px 50px 0 0;
       }
 
@@ -983,13 +1029,18 @@
         padding: 12px 40px 12px 70px;
       }
 
+      .btn-close-all {
+        top: 28px;
+        right: 40px;
+      }
+
       .panel .search {
         margin: 44px auto 36px;
       }
 
       .list-scroll {
-        max-height: 1500px;
         padding-right: 30px;
+        padding-bottom: 60px;
       }
 
       .panel .month-row {
@@ -1102,9 +1153,6 @@
       </li>
     </ul>
   </aside>
-
-  <!-- ===== TAMPILAN UTAMA (hero, pencarian, semua bagian event) ===== -->
-  <div id="viewMain">
 
   <!-- hero -->
   <section class="hero" id="events">
@@ -1251,12 +1299,12 @@
     </div>
   </section>
 
-  </div>
-  <!-- ===== AKHIR TAMPILAN UTAMA ===== -->
+  <!-- ===== POPUP "SEE ALL" UPCOMING EVENTS (halaman di belakang tetap terlihat, gelap) ===== -->
+  <div class="overlay-all" id="overlayAll" hidden></div>
 
-  <!-- ===== TAMPILAN "SEE ALL" UPCOMING EVENTS (muncul menggantikan tampilan utama) ===== -->
-  <main class="panel" id="viewUpcomingAll" hidden>
+  <section class="panel" id="viewUpcomingAll" role="dialog" aria-label="Upcoming Events" hidden>
     <h2 class="section-label">Upcoming Events</h2>
+    <button class="btn-close-all" id="btnCloseAll" aria-label="Tutup"><i class="fa-solid fa-xmark"></i></button>
 
     <form class="search" id="searchFormAll" role="search">
       <input type="text" placeholder="Find Your Vibe" aria-label="Cari event">
@@ -1330,7 +1378,7 @@
         </div>
       </div>
     </div>
-  </main>
+  </section>
 
   <!-- footer -->
   <footer class="footer">
@@ -1550,30 +1598,49 @@
     });
 
     // ---------- "See All Event" pada Upcoming Events ----------
-    // klik -> tampilan utama diganti daftar lengkap upcoming events (masih di halaman ini)
-    // memakai #upcoming-all di URL supaya tombol Back di browser kembali ke tampilan utama
-    const viewMain = document.getElementById('viewMain');
-    const viewUpcomingAll = document.getElementById('viewUpcomingAll');
+    // klik -> muncul popup daftar lengkap upcoming events di atas halaman (halaman belakang digelapkan)
+    // memakai #upcoming-all di URL supaya tombol Back di browser menutup popup
+    const panelAll = document.getElementById('viewUpcomingAll');
+    const overlayAll = document.getElementById('overlayAll');
+    let dibukaLewatKlik = false;
 
-    function aturTampilan() {
-      const semua = location.hash === '#upcoming-all';
-      viewMain.hidden = semua;
-      viewUpcomingAll.hidden = !semua;
-      document.body.classList.toggle('show-all', semua);
-      window.scrollTo(0, 0);
+    function aturPopup() {
+      const buka = location.hash === '#upcoming-all';
+      panelAll.hidden = !buka;
+      overlayAll.hidden = !buka;
+      document.body.classList.toggle('modal-open', buka);
+    }
+
+    function tutupPopup() {
+      if (location.hash !== '#upcoming-all') return;
+      if (dibukaLewatKlik) {
+        dibukaLewatKlik = false;
+        history.back();
+      } else {
+        history.replaceState(null, '', location.pathname + location.search);
+        aturPopup();
+      }
     }
 
     document.getElementById('btnSeeAllUpcoming').addEventListener('click', function (e) {
       e.preventDefault();
+      dibukaLewatKlik = true;
       location.hash = 'upcoming-all';
+    });
+
+    document.getElementById('btnCloseAll').addEventListener('click', tutupPopup);
+    overlayAll.addEventListener('click', tutupPopup);
+
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') tutupPopup();
     });
 
     document.getElementById('searchFormAll').addEventListener('submit', function (e) {
       e.preventDefault();
     });
 
-    window.addEventListener('hashchange', aturTampilan);
-    aturTampilan();
+    window.addEventListener('hashchange', aturPopup);
+    aturPopup();
   </script>
 
 </body>
