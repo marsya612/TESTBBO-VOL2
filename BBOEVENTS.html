@@ -479,6 +479,10 @@
       display: none !important;
     }
 
+    [hidden] {
+      display: none !important;
+    }
+
     .only-desktop {
       display: none;
     }
@@ -766,6 +770,55 @@
       margin-top: 50px;
     }
 
+    /* ---------- tampilan "See All Upcoming Events" (bagian dari halaman ini) ---------- */
+    .show-all .navbar {
+      background: #bbb;
+    }
+
+    .panel {
+      background: #fff;
+      margin: 0 16px;
+      padding: 22px 0 30px;
+      border-radius: 40px 40px 0 0;
+      position: relative;
+      z-index: 60;
+    }
+
+    .panel .section-label {
+      margin-bottom: 0;
+      padding: 10px 24px 10px 40px;
+    }
+
+    .panel .search {
+      margin: 24px auto 20px;
+    }
+
+    .list-scroll {
+      max-height: 80vh;
+      overflow-y: auto;
+      padding-right: 14px;
+      scrollbar-width: thin;
+      scrollbar-color: #b3b3b3 #e6e6e6;
+    }
+
+    .list-scroll::-webkit-scrollbar {
+      width: 10px;
+    }
+
+    .list-scroll::-webkit-scrollbar-track {
+      background: #e6e6e6;
+      border-radius: 10px;
+    }
+
+    .list-scroll::-webkit-scrollbar-thumb {
+      background: #b3b3b3;
+      border-radius: 10px;
+    }
+
+    .panel .month-label {
+      border-radius: 6px;
+    }
+
     @media (min-width: 1024px) {
       .only-desktop {
         display: block;
@@ -918,6 +971,32 @@
       .footer {
         margin-top: 60px;
       }
+
+      /* tampilan "See All Upcoming Events": 2 kartu per baris */
+      .panel {
+        margin: 0 28px;
+        padding: 30px 0 60px;
+        border-radius: 50px 50px 0 0;
+      }
+
+      .panel .section-label {
+        padding: 12px 40px 12px 70px;
+      }
+
+      .panel .search {
+        margin: 44px auto 36px;
+      }
+
+      .list-scroll {
+        max-height: 1500px;
+        padding-right: 30px;
+      }
+
+      .panel .month-row {
+        grid-template-columns: 1fr 1fr;
+        gap: 30px;
+        padding: 0 120px 24px 0;
+      }
     }
   </style>
 </head>
@@ -1023,6 +1102,9 @@
       </li>
     </ul>
   </aside>
+
+  <!-- ===== TAMPILAN UTAMA (hero, pencarian, semua bagian event) ===== -->
+  <div id="viewMain">
 
   <!-- hero -->
   <section class="hero" id="events">
@@ -1140,7 +1222,7 @@
 
       </div>
 
-      <a href="#" class="see-all">See All Event <i class="fa-solid fa-angle-right"></i></a>
+      <a href="#" class="see-all" id="btnSeeAllUpcoming">See All Event <i class="fa-solid fa-angle-right"></i></a>
     </div>
   </section>
 
@@ -1168,6 +1250,87 @@
       <a href="#" class="see-all">See All Event <i class="fa-solid fa-angle-right"></i></a>
     </div>
   </section>
+
+  </div>
+  <!-- ===== AKHIR TAMPILAN UTAMA ===== -->
+
+  <!-- ===== TAMPILAN "SEE ALL" UPCOMING EVENTS (muncul menggantikan tampilan utama) ===== -->
+  <main class="panel" id="viewUpcomingAll" hidden>
+    <h2 class="section-label">Upcoming Events</h2>
+
+    <form class="search" id="searchFormAll" role="search">
+      <input type="text" placeholder="Find Your Vibe" aria-label="Cari event">
+      <button type="submit" aria-label="Cari"><i class="fa-solid fa-magnifying-glass"></i></button>
+    </form>
+
+    <div class="container">
+      <div class="tabs" data-target="upcomingAllList">
+        <button class="tab active" data-filter="all">All Event</button>
+        <button class="tab" data-filter="now">Events This Month</button>
+      </div>
+
+      <div class="list-scroll">
+        <div id="upcomingAllList">
+
+          <div class="month-group" data-kategori="now">
+            <div class="month-label">Jan</div>
+            <div class="month-row">
+              <a href="#" class="card"><div class="card-img placeholder"><i class="fa-regular fa-image"></i></div><h3>Judul Event</h3></a>
+              <a href="#" class="card"><div class="card-img placeholder"><i class="fa-regular fa-image"></i></div><h3>Judul Event</h3></a>
+              <a href="#" class="card"><div class="card-img placeholder"><i class="fa-regular fa-image"></i></div><h3>Judul Event</h3></a>
+              <a href="#" class="card"><div class="card-img placeholder"><i class="fa-regular fa-image"></i></div><h3>Judul Event</h3></a>
+              <a href="#" class="card"><div class="card-img placeholder"><i class="fa-regular fa-image"></i></div><h3>Judul Event</h3></a>
+              <a href="#" class="card"><div class="card-img placeholder"><i class="fa-regular fa-image"></i></div><h3>Judul Event</h3></a>
+            </div>
+          </div>
+
+          <div class="month-group" data-kategori="later">
+            <div class="month-label">Feb</div>
+            <div class="month-row">
+              <a href="#" class="card"><div class="card-img placeholder"><i class="fa-regular fa-image"></i></div><h3>Judul Event</h3></a>
+              <a href="#" class="card"><div class="card-img placeholder"><i class="fa-regular fa-image"></i></div><h3>Judul Event</h3></a>
+              <a href="#" class="card"><div class="card-img placeholder"><i class="fa-regular fa-image"></i></div><h3>Judul Event</h3></a>
+            </div>
+          </div>
+
+          <div class="month-group" data-kategori="later">
+            <div class="month-label">Mar</div>
+            <div class="month-row">
+              <a href="#" class="card"><div class="card-img placeholder"><i class="fa-regular fa-image"></i></div><h3>Judul Event</h3></a>
+              <a href="#" class="card"><div class="card-img placeholder"><i class="fa-regular fa-image"></i></div><h3>Judul Event</h3></a>
+            </div>
+          </div>
+
+          <div class="month-group" data-kategori="later">
+            <div class="month-label">Jun</div>
+            <div class="month-row">
+              <a href="#" class="card"><div class="card-img placeholder"><i class="fa-regular fa-image"></i></div><h3>Judul Event</h3></a>
+              <a href="#" class="card"><div class="card-img placeholder"><i class="fa-regular fa-image"></i></div><h3>Judul Event</h3></a>
+            </div>
+          </div>
+
+          <div class="month-group" data-kategori="later">
+            <div class="month-label">Nov</div>
+            <div class="month-row">
+              <a href="#" class="card"><div class="card-img placeholder"><i class="fa-regular fa-image"></i></div><h3>Judul Event</h3></a>
+            </div>
+          </div>
+
+          <div class="month-group" data-kategori="later">
+            <div class="month-label">Dec</div>
+            <div class="month-row">
+              <a href="#" class="card"><div class="card-img placeholder"><i class="fa-regular fa-image"></i></div><h3>Judul Event</h3></a>
+              <a href="#" class="card"><div class="card-img placeholder"><i class="fa-regular fa-image"></i></div><h3>Judul Event</h3></a>
+              <a href="#" class="card"><div class="card-img placeholder"><i class="fa-regular fa-image"></i></div><h3>Judul Event</h3></a>
+              <a href="#" class="card"><div class="card-img placeholder"><i class="fa-regular fa-image"></i></div><h3>Judul Event</h3></a>
+              <a href="#" class="card"><div class="card-img placeholder"><i class="fa-regular fa-image"></i></div><h3>Judul Event</h3></a>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </main>
 
   <!-- footer -->
   <footer class="footer">
@@ -1385,6 +1548,32 @@
         });
       });
     });
+
+    // ---------- "See All Event" pada Upcoming Events ----------
+    // klik -> tampilan utama diganti daftar lengkap upcoming events (masih di halaman ini)
+    // memakai #upcoming-all di URL supaya tombol Back di browser kembali ke tampilan utama
+    const viewMain = document.getElementById('viewMain');
+    const viewUpcomingAll = document.getElementById('viewUpcomingAll');
+
+    function aturTampilan() {
+      const semua = location.hash === '#upcoming-all';
+      viewMain.hidden = semua;
+      viewUpcomingAll.hidden = !semua;
+      document.body.classList.toggle('show-all', semua);
+      window.scrollTo(0, 0);
+    }
+
+    document.getElementById('btnSeeAllUpcoming').addEventListener('click', function (e) {
+      e.preventDefault();
+      location.hash = 'upcoming-all';
+    });
+
+    document.getElementById('searchFormAll').addEventListener('submit', function (e) {
+      e.preventDefault();
+    });
+
+    window.addEventListener('hashchange', aturTampilan);
+    aturTampilan();
   </script>
 
 </body>
