@@ -25,11 +25,6 @@
       text-decoration: none;
     }
 
-    ul,
-    ol {
-      list-style: none;
-    }
-
     button {
       font-family: inherit;
       background: none;
@@ -48,15 +43,7 @@
       margin: 0 auto;
     }
 
-    .placeholder {
-      background-color: #d9d9d9;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #b3b3b3;
-    }
-
-    /* tombol abu-abu panjang (Check the payment status / Done) */
+    /* tombol abu-abu panjang (Done) */
     .btn-main {
       display: block;
       width: 100%;
@@ -72,11 +59,6 @@
 
     .btn-main:hover {
       background: #777;
-    }
-
-    .btn-main:disabled {
-      background: #c9c9c9;
-      cursor: not-allowed;
     }
 
     /* ===================== CSS KHUSUS HALAMAN INI ===================== */
@@ -98,60 +80,6 @@
       font-weight: 700;
     }
 
-    .order-label {
-      margin-top: 8px;
-      font-size: 17px;
-      font-weight: 500;
-      color: #999;
-    }
-
-    .order-id {
-      font-size: 17px;
-      font-weight: 700;
-      color: #999;
-      word-break: break-all;
-    }
-
-    .status-body {
-      text-align: center;
-      padding: 44px 0 40px;
-    }
-
-    .status-text {
-      font-size: 20px;
-      line-height: 1.5;
-    }
-
-    .status-text strong {
-      display: block;
-      margin-top: 6px;
-      font-weight: 800;
-    }
-
-    @media (min-width: 1024px) {
-      .status-head h1 {
-        font-size: 36px;
-      }
-
-      .order-label,
-      .order-id {
-        font-size: 28px;
-      }
-
-      .status-body {
-        padding: 70px 0 60px;
-      }
-
-      .status-text {
-        font-size: 32px;
-      }
-
-      .btn-main {
-        padding: 22px 20px;
-        font-size: 24px;
-      }
-    }
-
     .order-line {
       margin-top: 8px;
       font-size: 17px;
@@ -166,22 +94,27 @@
       word-break: break-all;
     }
 
+    .status-body {
+      text-align: center;
+      padding: 44px 0 40px;
+    }
+
     .success-icon {
+      display: block;
       width: 150px;
       height: 130px;
       margin: 0 auto 36px;
     }
 
-    @media (min-width: 1024px) {
-      .order-line {
-        font-size: 28px;
-      }
+    .status-text {
+      font-size: 20px;
+      line-height: 1.5;
+    }
 
-      .success-icon {
-        width: 380px;
-        height: 330px;
-        margin-bottom: 60px;
-      }
+    .status-text strong {
+      display: block;
+      margin-top: 6px;
+      font-weight: 800;
     }
 
     /* ---------- confetti & animasi ikon ---------- */
@@ -193,18 +126,6 @@
       height: 100%;
       pointer-events: none;
       z-index: 50;
-    }
-
-    .success-btn {
-      display: block;
-      margin: 0 auto 36px;
-      border-radius: 50%;
-    }
-
-    .success-btn .success-icon {
-      display: block;
-      margin: 0;
-      transition: transform 0.2s;
     }
 
     .circle-anim {
@@ -243,11 +164,71 @@
     }
 
     @media (min-width: 1024px) {
-      .success-btn {
+      .status-head h1 {
+        font-size: 36px;
+      }
+
+      .order-line {
+        font-size: 28px;
+      }
+
+      .status-body {
+        padding: 70px 0 60px;
+      }
+
+      .success-icon {
+        width: 380px;
+        height: 330px;
         margin-bottom: 60px;
       }
 
-      // ---------- confetti ----------
+      .status-text {
+        font-size: 32px;
+      }
+
+      .btn-main {
+        padding: 22px 20px;
+        font-size: 24px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <canvas class="confetti" id="confetti" aria-hidden="true"></canvas>
+
+  <main class="container status">
+    <div class="status-head">
+      <h1>Payment Successful</h1>
+      <p class="order-line">Order ID <strong id="orderId">BBO1363524029</strong></p>
+    </div>
+
+    <div class="status-body">
+      <svg class="success-icon" viewBox="0 0 360 330" aria-hidden="true">
+        <circle class="circle-anim" cx="150" cy="170" r="150" fill="#f4f4f4"/>
+        <polyline class="check-anim" pathLength="1" points="22,132 152,258 340,44" fill="none" stroke="#d9d9d9" stroke-width="42"/>
+      </svg>
+      <p class="status-text">
+        Your payment has been confirmed.
+        <strong>Thank You for Your Order!</strong>
+      </p>
+    </div>
+
+    <a href="BBOEVENTS.html" class="btn-main" id="btnDone">Done</a>
+  </main>
+
+  <script>
+    // ---------- Order ID (diambil dari halaman buy ticket, kalau ada) ----------
+    try {
+      const order = JSON.parse(sessionStorage.getItem('bbo_order'));
+      if (order && order.orderId) {
+        document.getElementById('orderId').textContent = order.orderId;
+      }
+    } catch (err) {
+      // pakai contoh Order ID di atas
+    }
+
+    // ---------- confetti ----------
     // tanpa library: partikel digambar di <canvas> lalu berhenti sendiri setelah semuanya jatuh
     const canvas = document.getElementById('confetti');
     const ctx = canvas.getContext('2d');
