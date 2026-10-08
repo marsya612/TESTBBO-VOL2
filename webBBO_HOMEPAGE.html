@@ -1,0 +1,1216 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BBO - Home</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    /* ===================== CSS BERSAMA (semua halaman) ===================== */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', Arial, Helvetica, sans-serif;
+      color: #000;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    ul {
+      list-style: none;
+    }
+
+    button,
+    input {
+      font-family: inherit;
+    }
+
+    button {
+      background: none;
+      border: none;
+      color: inherit;
+      cursor: pointer;
+    }
+
+    .container {
+      width: 90%;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .placeholder {
+      background-color: #d9d9d9;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #b3b3b3;
+      font-size: 40px;
+    }
+
+    /* ---------- navbar ---------- */
+    .navbar {
+      height: 90px;
+      background: #fff;
+      position: relative;
+      z-index: 50;
+    }
+
+    .navbar .container {
+      height: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      font-size: 24px;
+      font-weight: 800;
+    }
+
+    /* menu desktop (muncul di layar besar saja) */
+    .nav-links {
+      display: none;
+      gap: 50px;
+      align-items: center;
+    }
+
+    .nav-item {
+      position: relative;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* tulisan menu = link ke halaman */
+    .nav-link {
+      padding: 10px 0;
+      font-size: 18px;
+      font-weight: 500;
+    }
+
+    .nav-link:hover {
+      text-decoration: underline;
+    }
+
+    /* panah kecil = tombol buka dropdown */
+    .nav-btn {
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .nav-btn:hover {
+      opacity: 0.6;
+    }
+
+    .nav-btn i {
+      font-size: 14px;
+      transition: transform 0.3s;
+    }
+
+    /* panah ▲ jadi ▼ saat dibuka */
+    .nav-btn.open i {
+      transform: rotate(180deg);
+    }
+
+    .nav-dropdown {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      min-width: 210px;
+      padding: 8px 0;
+      background: #fff;
+      border: 1px solid #d9d9d9;
+      border-radius: 8px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(-6px);
+      transition: opacity 0.25s, transform 0.25s, visibility 0.25s;
+      z-index: 20;
+    }
+
+    /* menu paling kanan dibuka ke arah kiri supaya tidak keluar layar */
+    .nav-item:last-child .nav-dropdown {
+      left: auto;
+      right: 0;
+    }
+
+    .nav-btn.open + .nav-dropdown {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+    }
+
+    .nav-dropdown a {
+      display: block;
+      padding: 10px 20px;
+      font-size: 16px;
+    }
+
+    .nav-dropdown a:hover {
+      background: #f2f2f2;
+    }
+
+    /* tombol hamburger */
+    .btn-menu {
+      width: 44px;
+      height: 44px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 7px;
+    }
+
+    .btn-menu span {
+      display: block;
+      width: 30px;
+      height: 3px;
+      background: #000;
+      border-radius: 3px;
+    }
+
+    /* ---------- sidebar menu (slide dari kiri) ---------- */
+    .overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.6);
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s, visibility 0.3s;
+      z-index: 150;
+    }
+
+    .overlay.show {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .sidebar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 80%;
+      max-width: 320px;
+      height: 100%;
+      background: #fff;
+      display: flex;
+      flex-direction: column;
+      transform: translateX(-100%);
+      visibility: hidden;
+      transition: transform 0.3s ease, visibility 0.3s;
+      z-index: 200;
+    }
+
+    .sidebar.open {
+      transform: translateX(0);
+      visibility: visible;
+    }
+
+    .sidebar-head {
+      height: 90px;
+      flex: none;
+      padding: 0 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid #000;
+    }
+
+    .btn-close {
+      width: 44px;
+      height: 44px;
+      border: 2px solid #000;
+      font-size: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .sidebar-menu {
+      padding: 10px 20px;
+      overflow-y: auto;
+    }
+
+    .sidebar-menu > li > a,
+    .dropdown-btn {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      width: 100%;
+      padding: 14px 0;
+      font-size: 18px;
+      font-weight: 500;
+      text-align: left;
+    }
+
+    .dropdown-btn i {
+      font-size: 16px;
+      transition: transform 0.3s;
+    }
+
+    /* panah ▲ jadi ▼ saat dibuka */
+    .dropdown-btn.open i {
+      transform: rotate(180deg);
+    }
+
+    .submenu {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease;
+    }
+
+    .submenu a {
+      display: block;
+      padding: 10px 0 10px 24px;
+      font-size: 15px;
+    }
+
+    .submenu a:hover,
+    .sidebar-menu > li > a:hover {
+      text-decoration: underline;
+    }
+
+    /* ---------- footer ---------- */
+    .footer {
+      padding: 40px 0 30px;
+    }
+
+    .footer-wrap {
+      display: grid;
+      grid-template-columns: 110px 1.3fr 0.8fr;
+      grid-template-areas:
+        "brand about product"
+        "brand service product"
+        "app app app";
+      column-gap: 14px;
+      row-gap: 16px;
+    }
+
+    .f-brand   { grid-area: brand; }
+    .f-about   { grid-area: about; }
+    .f-service { grid-area: service; }
+    .f-product { grid-area: product; }
+    .f-app     { grid-area: app; margin-top: 12px; }
+
+    .footer-img {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      margin-top: 14px;
+    }
+
+    .footer-img div {
+      height: 56px;
+      border-radius: 10px;
+      font-size: 22px;
+    }
+
+    .footer h3 {
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .footer li a {
+      display: block;
+      padding: 4px 0;
+      font-size: 13px;
+    }
+
+    .footer li a:hover {
+      text-decoration: underline;
+    }
+
+    .store-btn {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 22px;
+    }
+
+    .store-btn a {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: #000;
+      color: #fff;
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-size: 11px;
+    }
+
+    .store-btn i {
+      font-size: 24px;
+    }
+
+    .store-btn strong {
+      display: block;
+      font-size: 14px;
+    }
+
+    .sosmed {
+      display: flex;
+      gap: 14px;
+    }
+
+    .sosmed a {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: #000;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+    }
+
+    .sosmed a:hover {
+      background: #333;
+    }
+
+    .copyright {
+      background: #000;
+      color: #fff;
+      font-size: 12px;
+      font-weight: 600;
+      padding: 20px 0;
+    }
+
+    /* ---------- tombol wa melayang ---------- */
+    .wa-float {
+      position: fixed;
+      right: 16px;
+      bottom: 20px;
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: #000;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+      z-index: 100;
+    }
+
+    @media (min-width: 1024px) {
+      .navbar {
+        height: 100px;
+      }
+
+      .logo {
+        font-size: 28px;
+      }
+
+      .nav-links {
+        display: flex;
+      }
+
+      .btn-menu,
+      .sidebar,
+      .overlay {
+        display: none !important;
+      }
+
+      .footer {
+        padding: 55px 0;
+      }
+
+      .footer-wrap {
+        grid-template-columns: 1.4fr 0.9fr 0.9fr 1.1fr 1.5fr;
+        grid-template-areas: "brand product service about app";
+        column-gap: 30px;
+      }
+
+      .f-app {
+        margin-top: 0;
+      }
+
+      .footer-img {
+        flex-direction: row;
+        margin-top: 30px;
+      }
+
+      .footer-img div {
+        width: 150px;
+        height: 76px;
+      }
+
+      .footer h3 {
+        font-size: 22px;
+      }
+
+      .footer li a {
+        font-size: 18px;
+      }
+
+      .wa-float {
+        width: 70px;
+        height: 70px;
+        font-size: 34px;
+      }
+    }
+
+    /* ===================== CSS KHUSUS HALAMAN INI ===================== */
+    /* icon plus bulat untuk Show All */
+    .icon-plus {
+      width: 44px;
+      height: 44px;
+      border: 3px solid #000;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      color: #000;
+    }
+
+    /* ---------- slider utama ---------- */
+    .slider {
+      position: relative;
+      overflow: hidden;
+      background: #d9d9d9;
+    }
+
+    .slides {
+      display: flex;
+      transition: transform 0.5s ease;
+    }
+
+    .slide {
+      min-width: 100%;
+      height: 240px;
+      font-size: 60px;
+    }
+
+    .btn-arrow {
+      display: none;
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 46px;
+      height: 46px;
+      border-radius: 50%;
+      border: 2px solid #000;
+      font-size: 18px;
+    }
+
+    .btn-arrow:hover {
+      background: rgba(255, 255, 255, 0.6);
+    }
+
+    .btn-prev { left: 7%; }
+    .btn-next { right: 7%; }
+
+    .dots {
+      position: absolute;
+      bottom: 12px;
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 10px;
+      background: #f2f2f2;
+      transition: width 0.3s;
+    }
+
+    .dot.active {
+      width: 30px;
+    }
+
+    /* ---------- galeri ---------- */
+    .galeri {
+      padding: 30px 0 50px;
+    }
+
+    .galeri h2 {
+      text-align: center;
+      font-size: 28px;
+      font-weight: 800;
+      margin-bottom: 14px;
+    }
+
+    .tabs {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      padding: 0 5%;
+      margin-bottom: 10px;
+      overflow-x: auto;
+    }
+
+    .tab {
+      padding: 8px 2px;
+      font-size: 15px;
+      white-space: nowrap;
+      border-bottom: 2px solid transparent;
+    }
+
+    .tab:hover {
+      border-bottom-color: #999;
+    }
+
+    .tab.active {
+      font-weight: 700;
+      border-bottom-color: #000;
+    }
+
+    /* galeri versi mobile (slider) */
+    .galeri-slider {
+      position: relative;
+    }
+
+    .galeri-list {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      padding: 30px 7%;
+      scrollbar-width: none;
+    }
+
+    .galeri-list::-webkit-scrollbar {
+      display: none;
+    }
+
+    .galeri-item {
+      min-width: 86%;
+      height: 260px;
+      border-radius: 12px;
+      scroll-snap-align: center;
+      transform: scale(0.85);
+      opacity: 0.7;
+      transition: 0.3s;
+    }
+
+    .galeri-item.active {
+      transform: scale(1);
+      opacity: 1;
+    }
+
+    /* kartu Show All di akhir slider */
+    .show-all-card {
+      flex-direction: column;
+      gap: 12px;
+      color: #000;
+      font-size: 18px;
+      font-weight: 700;
+    }
+
+    .btn-galeri {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      border: 2px solid #000;
+      font-size: 16px;
+      z-index: 2;
+    }
+
+    .btn-galeri.prev { left: 12%; }
+    .btn-galeri.next { right: 12%; }
+
+    /* galeri versi desktop (grid) */
+    .galeri-grid {
+      display: none;
+    }
+
+    /* ---------- tablet ---------- */
+    @media (min-width: 640px) {
+      .galeri-list {
+        padding: 30px 20%;
+      }
+
+      .galeri-item {
+        min-width: 60%;
+      }
+
+      .btn-galeri.prev { left: 24%; }
+      .btn-galeri.next { right: 24%; }
+    }
+
+    @media (min-width: 1024px) {
+      .slide {
+        height: 600px;
+      }
+
+      .btn-arrow {
+        display: block;
+      }
+
+      .dots {
+        display: none;
+      }
+
+      .galeri {
+        padding: 60px 0 0;
+      }
+
+      .galeri h2 {
+        font-size: 48px;
+        margin-bottom: 24px;
+      }
+
+      .tabs {
+        gap: 40px;
+        margin-bottom: 40px;
+      }
+
+      .tab {
+        font-size: 20px;
+      }
+
+      .galeri-slider {
+        display: none;
+      }
+
+      .galeri-grid {
+        display: block;
+        background: #d9d9d9;
+        padding: 50px 0;
+      }
+
+      .grid-wrap {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 30px;
+      }
+
+      .grid-item {
+        height: 200px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #b3b3b3;
+        font-size: 56px;
+      }
+
+      /* kalau sudah pakai foto asli: <img> di dalam .grid-item */
+      .grid-item img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 8px;
+      }
+
+      .grid-item.show-all {
+        flex-direction: column;
+        gap: 10px;
+        color: #000;
+        font-size: 20px;
+        font-weight: 700;
+      }
+
+      .grid-item.show-all:hover {
+        text-decoration: underline;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- navbar -->
+  <header class="navbar">
+    <div class="container">
+      <a href="webBBO_HOMEPAGE.html" class="logo">Logo</a>
+
+      <!-- menu desktop dengan dropdown -->
+      <nav class="nav-links" aria-label="Menu utama">
+        <div class="nav-item">
+          <a href="produk.html" class="nav-link">Products</a>
+          <button type="button" class="nav-btn" aria-expanded="false" aria-label="Buka menu Products">
+            <i class="fa-solid fa-caret-up"></i>
+          </button>
+          <ul class="nav-dropdown">
+            <li><a href="BBOEVENTS.html">BBO Events</a></li>
+            <li><a href="produk.html#jobs">BBO Jobs</a></li>
+            <li><a href="produk.html#toko">Toko BBO</a></li>
+            <li><a href="produk.html#pay">BBO Pay</a></li>
+          </ul>
+        </div>
+
+        <div class="nav-item">
+          <a href="#" class="nav-link">Our Services</a>
+          <button type="button" class="nav-btn" aria-expanded="false" aria-label="Buka menu Our Services">
+            <i class="fa-solid fa-caret-up"></i>
+          </button>
+          <ul class="nav-dropdown">
+            <li><a href="#">Login Dashboard</a></li>
+            <li><a href="#">Claim Code</a></li>
+          </ul>
+        </div>
+
+        <div class="nav-item">
+          <a href="#" class="nav-link">About Us</a>
+          <button type="button" class="nav-btn" aria-expanded="false" aria-label="Buka menu About Us">
+            <i class="fa-solid fa-caret-up"></i>
+          </button>
+          <ul class="nav-dropdown">
+            <li><a href="#">Privacy Policy</a></li>
+            <li><a href="#">Term and Conditions</a></li>
+            <li><a href="#">Contact Us</a></li>
+          </ul>
+        </div>
+      </nav>
+
+      <button class="btn-menu" id="btnMenu" aria-label="Buka menu" aria-expanded="false">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+  </header>
+
+  <!-- sidebar menu (muncul dari kiri) -->
+  <div class="overlay" id="overlay"></div>
+
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-head">
+      <a href="webBBO_HOMEPAGE.html" class="logo">Logo</a>
+      <button class="btn-close" id="btnClose" aria-label="Tutup menu">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </div>
+
+    <ul class="sidebar-menu">
+      <li><a href="webBBO_HOMEPAGE.html">Home</a></li>
+
+      <li>
+        <button class="dropdown-btn" id="btnAbout" aria-expanded="false">
+          About Us <i class="fa-solid fa-caret-up"></i>
+        </button>
+        <ul class="submenu">
+          <li><a href="#">Privacy Policy</a></li>
+          <li><a href="#">Term and Conditions</a></li>
+          <li><a href="#">Contact Us</a></li>
+        </ul>
+      </li>
+
+      <li>
+        <button class="dropdown-btn" aria-expanded="false">
+          Our Services <i class="fa-solid fa-caret-up"></i>
+        </button>
+        <ul class="submenu">
+          <li><a href="#">Login Dashboard</a></li>
+          <li><a href="#">Claim Code</a></li>
+        </ul>
+      </li>
+
+      <li>
+        <button class="dropdown-btn" aria-expanded="false">
+          Products <i class="fa-solid fa-caret-up"></i>
+        </button>
+        <ul class="submenu">
+          <li><a href="BBOEVENTS.html">BBO Events</a></li>
+          <li><a href="produk.html#jobs">BBO Jobs</a></li>
+          <li><a href="produk.html#toko">Toko BBO</a></li>
+          <li><a href="produk.html#pay">BBO Pay</a></li>
+        </ul>
+      </li>
+    </ul>
+  </aside>
+
+  <!-- slider utama -->
+  <section class="slider">
+    <div class="slides" id="slides">
+      <div class="slide placeholder"><i class="fa-regular fa-image"></i></div>
+      <div class="slide placeholder"><i class="fa-regular fa-image"></i></div>
+      <div class="slide placeholder"><i class="fa-regular fa-image"></i></div>
+    </div>
+
+    <button class="btn-arrow btn-prev" id="prev" aria-label="Sebelumnya"><i class="fa-solid fa-arrow-left"></i></button>
+    <button class="btn-arrow btn-next" id="next" aria-label="Berikutnya"><i class="fa-solid fa-arrow-right"></i></button>
+
+    <div class="dots" id="dots"></div>
+  </section>
+
+  <!-- galeri -->
+  <section class="galeri">
+    <!-- judul GALERY bisa diklik menuju halaman galeri -->
+    <h2><a href="galeri.html">GALERY</a></h2>
+
+    <div class="tabs">
+      <button class="tab active" data-filter="all">All Event</button>
+      <button class="tab" data-filter="event">Event</button>
+      <button class="tab" data-filter="concert">Concert</button>
+      <button class="tab" data-filter="exhibition">Exhibition</button>
+    </div>
+
+    <!-- versi mobile: slider (6 gambar + Show All) -->
+    <div class="galeri-slider">
+      <button class="btn-galeri prev" id="galeriPrev" aria-label="Sebelumnya"><i class="fa-solid fa-arrow-left"></i></button>
+      <button class="btn-galeri next" id="galeriNext" aria-label="Berikutnya"><i class="fa-solid fa-arrow-right"></i></button>
+
+      <div class="galeri-list" id="galeriList">
+        <div class="galeri-item placeholder" data-kategori="event"><i class="fa-regular fa-image"></i></div>
+        <div class="galeri-item placeholder" data-kategori="concert"><i class="fa-regular fa-image"></i></div>
+        <div class="galeri-item placeholder" data-kategori="exhibition"><i class="fa-regular fa-image"></i></div>
+        <div class="galeri-item placeholder" data-kategori="event"><i class="fa-regular fa-image"></i></div>
+        <div class="galeri-item placeholder" data-kategori="concert"><i class="fa-regular fa-image"></i></div>
+        <div class="galeri-item placeholder" data-kategori="exhibition"><i class="fa-regular fa-image"></i></div>
+
+        <!-- Show All selalu di akhir -->
+        <a href="galeri.html" class="galeri-item placeholder show-all-card">
+          <span class="icon-plus"><i class="fa-solid fa-plus"></i></span>
+          Show All
+        </a>
+      </div>
+    </div>
+
+    <!-- versi desktop: grid -->
+    <div class="galeri-grid">
+      <div class="container grid-wrap">
+        <div class="grid-item" data-kategori="event"><i class="fa-regular fa-image"></i></div>
+        <div class="grid-item" data-kategori="concert"><i class="fa-regular fa-image"></i></div>
+        <div class="grid-item" data-kategori="exhibition"><i class="fa-regular fa-image"></i></div>
+        <div class="grid-item" data-kategori="event"><i class="fa-regular fa-image"></i></div>
+        <div class="grid-item" data-kategori="concert"><i class="fa-regular fa-image"></i></div>
+        <div class="grid-item" data-kategori="exhibition"><i class="fa-regular fa-image"></i></div>
+        <div class="grid-item" data-kategori="event"><i class="fa-regular fa-image"></i></div>
+        <div class="grid-item" data-kategori="concert"><i class="fa-regular fa-image"></i></div>
+        <div class="grid-item" data-kategori="exhibition"><i class="fa-regular fa-image"></i></div>
+        <div class="grid-item" data-kategori="event"><i class="fa-regular fa-image"></i></div>
+        <div class="grid-item" data-kategori="concert"><i class="fa-regular fa-image"></i></div>
+        <a href="galeri.html" class="grid-item show-all">
+          <span class="icon-plus"><i class="fa-solid fa-plus"></i></span>
+          Show All
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- footer -->
+  <footer class="footer">
+    <div class="container footer-wrap">
+
+      <div class="f-brand">
+        <a href="webBBO_HOMEPAGE.html" class="logo">Logo</a>
+        <div class="footer-img">
+          <div class="placeholder"><i class="fa-regular fa-image"></i></div>
+          <div class="placeholder"><i class="fa-regular fa-image"></i></div>
+        </div>
+      </div>
+
+      <div class="f-about">
+        <h3>About Us</h3>
+        <ul>
+          <li><a href="#">Privacy Policy</a></li>
+          <li><a href="#">Term and Conditions</a></li>
+          <li><a href="#">Contact Us</a></li>
+        </ul>
+      </div>
+
+      <div class="f-service">
+        <h3>Our Services</h3>
+        <ul>
+          <li><a href="#">Login Dashboard</a></li>
+          <li><a href="#">Claim Code</a></li>
+        </ul>
+      </div>
+
+      <div class="f-product">
+        <h3>Products</h3>
+        <ul>
+          <li><a href="BBOEVENTS.html">BBO Events</a></li>
+          <li><a href="produk.html#jobs">BBO Jobs</a></li>
+          <li><a href="produk.html#toko">Toko BBO</a></li>
+          <li><a href="produk.html#pay">BBO Pay</a></li>
+        </ul>
+      </div>
+
+      <div class="f-app">
+        <h3>Download The BBO App</h3>
+        <div class="store-btn">
+          <a href="#">
+            <i class="fa-brands fa-apple"></i>
+            <span>Download on The<strong>APP Store</strong></span>
+          </a>
+          <a href="#">
+            <i class="fa-brands fa-google-play"></i>
+            <span>Get It On<strong>Google Play</strong></span>
+          </a>
+        </div>
+
+        <h3>Connect With Us</h3>
+        <div class="sosmed">
+          <a href="#" aria-label="WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
+          <a href="#" aria-label="Email"><i class="fa-regular fa-envelope"></i></a>
+          <a href="#" aria-label="TikTok"><i class="fa-brands fa-tiktok"></i></a>
+          <a href="#" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+        </div>
+      </div>
+
+    </div>
+  </footer>
+
+  <div class="copyright">
+    <div class="container">
+      Copyright © 2026 BBO - All rights reserved. Powered by bbo.co.id
+    </div>
+  </div>
+
+  <!-- tombol wa -->
+  <a href="#" class="wa-float" aria-label="Chat WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
+
+  <script>
+    // ---------- dropdown di header (desktop) ----------
+    // kalau satu dropdown dibuka, yang lain otomatis menutup
+    const navBtns = document.querySelectorAll('.nav-btn');
+
+    function tutupNav() {
+      navBtns.forEach(function (btn) {
+        btn.classList.remove('open');
+        btn.setAttribute('aria-expanded', 'false');
+      });
+    }
+
+    navBtns.forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        const sudahBuka = btn.classList.contains('open');
+        tutupNav();
+        if (!sudahBuka) {
+          btn.classList.add('open');
+          btn.setAttribute('aria-expanded', 'true');
+        }
+      });
+    });
+
+    // tutup saat salah satu link di dropdown diklik
+    document.querySelectorAll('.nav-dropdown a').forEach(function (link) {
+      link.addEventListener('click', tutupNav);
+    });
+
+    // tutup saat klik di luar menu
+    document.addEventListener('click', function (e) {
+      if (!e.target.closest('.nav-item')) tutupNav();
+    });
+
+    // ---------- sidebar menu (mobile) ----------
+    const btnMenu = document.getElementById('btnMenu');
+    const btnClose = document.getElementById('btnClose');
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('overlay');
+
+    function bukaSidebar() {
+      sidebar.classList.add('open');
+      overlay.classList.add('show');
+      document.body.style.overflow = 'hidden';
+      btnMenu.setAttribute('aria-expanded', 'true');
+    }
+
+    function tutupSidebar() {
+      sidebar.classList.remove('open');
+      overlay.classList.remove('show');
+      document.body.style.overflow = '';
+      btnMenu.setAttribute('aria-expanded', 'false');
+    }
+
+    btnMenu.addEventListener('click', bukaSidebar);
+    btnClose.addEventListener('click', tutupSidebar);
+    overlay.addEventListener('click', tutupSidebar);
+
+    // tutup sidebar saat salah satu link diklik
+    sidebar.querySelectorAll('a').forEach(function (link) {
+      link.addEventListener('click', tutupSidebar);
+    });
+
+    // tutup semua menu saat tekan Esc
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') {
+        tutupSidebar();
+        tutupNav();
+      }
+    });
+
+    // tutup otomatis saat ukuran layar berubah
+    window.addEventListener('resize', function () {
+      if (window.innerWidth >= 1024) {
+        tutupSidebar();
+      } else {
+        tutupNav();
+      }
+    });
+
+    // ---------- dropdown di sidebar ----------
+    const dropdownBtns = document.querySelectorAll('.dropdown-btn');
+
+    function bukaDropdown(btn) {
+      const isi = btn.nextElementSibling;
+      btn.classList.add('open');
+      btn.setAttribute('aria-expanded', 'true');
+      isi.style.maxHeight = isi.scrollHeight + 'px';
+    }
+
+    function tutupDropdown(btn) {
+      const isi = btn.nextElementSibling;
+      btn.classList.remove('open');
+      btn.setAttribute('aria-expanded', 'false');
+      isi.style.maxHeight = null;
+    }
+
+    dropdownBtns.forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        const sudahBuka = btn.classList.contains('open');
+        dropdownBtns.forEach(tutupDropdown);
+        if (!sudahBuka) bukaDropdown(btn);
+      });
+    });
+
+    // About Us terbuka dari awal, seperti di coretan
+    // (hapus baris ini kalau mau semuanya tertutup)
+    bukaDropdown(document.getElementById('btnAbout'));
+
+    // ---------- slider utama ----------
+    const slides = document.getElementById('slides');
+    const total = slides.children.length;
+    const dotsBox = document.getElementById('dots');
+    let index = 0;
+    let auto;
+
+    for (let i = 0; i < total; i++) {
+      const dot = document.createElement('button');
+      dot.className = 'dot';
+      dot.setAttribute('aria-label', 'Slide ' + (i + 1));
+      dot.addEventListener('click', function () {
+        showSlide(i);
+        startAuto();
+      });
+      dotsBox.appendChild(dot);
+    }
+
+    function showSlide(n) {
+      index = (n + total) % total;
+      slides.style.transform = 'translateX(-' + index * 100 + '%)';
+
+      document.querySelectorAll('.dot').forEach(function (d, i) {
+        d.classList.toggle('active', i === index);
+      });
+    }
+
+    function startAuto() {
+      clearInterval(auto);
+      auto = setInterval(function () {
+        showSlide(index + 1);
+      }, 5000);
+    }
+
+    document.getElementById('prev').addEventListener('click', function () {
+      showSlide(index - 1);
+      startAuto();
+    });
+
+    document.getElementById('next').addEventListener('click', function () {
+      showSlide(index + 1);
+      startAuto();
+    });
+
+    // geser untuk hp
+    let touchStart = 0;
+
+    slides.addEventListener('touchstart', function (e) {
+      touchStart = e.touches[0].clientX;
+    });
+
+    slides.addEventListener('touchend', function (e) {
+      const selisih = e.changedTouches[0].clientX - touchStart;
+      if (selisih < -40) showSlide(index + 1);
+      if (selisih > 40) showSlide(index - 1);
+      startAuto();
+    });
+
+    showSlide(0);
+    startAuto();
+
+    // ---------- galeri: tab filter ----------
+    const tabs = document.querySelectorAll('.tab');
+    const semuaItem = document.querySelectorAll('[data-kategori]');
+
+    tabs.forEach(function (tab) {
+      tab.addEventListener('click', function () {
+        tabs.forEach(function (t) { t.classList.remove('active'); });
+        tab.classList.add('active');
+
+        const kategori = tab.dataset.filter;
+        semuaItem.forEach(function (item) {
+          const cocok = kategori === 'all' || item.dataset.kategori === kategori;
+          item.style.display = cocok ? '' : 'none';
+        });
+
+        galeriList.scrollLeft = 0;
+        cekTengah();
+      });
+    });
+
+    // ---------- galeri mobile: item paling tengah jadi besar ----------
+    const galeriList = document.getElementById('galeriList');
+    const galeriItems = galeriList.querySelectorAll('.galeri-item');
+
+    function cekTengah() {
+      const tengah = galeriList.getBoundingClientRect().left + galeriList.clientWidth / 2;
+      let terdekat = null;
+      let jarakMin = Infinity;
+
+      galeriItems.forEach(function (item) {
+        if (item.offsetParent === null) return; // item yang disembunyikan
+        const box = item.getBoundingClientRect();
+        const jarak = Math.abs(box.left + box.width / 2 - tengah);
+        if (jarak < jarakMin) {
+          jarakMin = jarak;
+          terdekat = item;
+        }
+      });
+
+      galeriItems.forEach(function (item) {
+        item.classList.toggle('active', item === terdekat);
+      });
+    }
+
+    galeriList.addEventListener('scroll', cekTengah);
+    window.addEventListener('resize', cekTengah);
+    window.addEventListener('load', cekTengah);
+
+    // panah galeri
+    function geserGaleri(arah) {
+      const lebar = galeriItems[0].offsetWidth + 15;
+      galeriList.scrollBy({ left: arah * lebar, behavior: 'smooth' });
+    }
+
+    document.getElementById('galeriPrev').addEventListener('click', function () {
+      geserGaleri(-1);
+    });
+
+    document.getElementById('galeriNext').addEventListener('click', function () {
+      geserGaleri(1);
+    });
+
+    cekTengah();
+  </script>
+
+</body>
+</html>
