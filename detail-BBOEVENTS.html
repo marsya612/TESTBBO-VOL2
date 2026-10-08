@@ -1,0 +1,1282 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BBO - Detail Event</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    /* ===================== CSS BERSAMA (semua halaman) ===================== */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', Arial, Helvetica, sans-serif;
+      color: #000;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    ul {
+      list-style: none;
+    }
+
+    button,
+    input {
+      font-family: inherit;
+    }
+
+    button {
+      background: none;
+      border: none;
+      color: inherit;
+      cursor: pointer;
+    }
+
+    .container {
+      width: 90%;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .placeholder {
+      background-color: #d9d9d9;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #b3b3b3;
+      font-size: 40px;
+    }
+
+    /* ---------- navbar ---------- */
+    .navbar {
+      height: 90px;
+      background: #fff;
+      position: relative;
+      z-index: 50;
+    }
+
+    .navbar .container {
+      height: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      font-size: 24px;
+      font-weight: 800;
+    }
+
+    /* menu desktop (muncul di layar besar saja) */
+    .nav-links {
+      display: none;
+      gap: 50px;
+      align-items: center;
+    }
+
+    .nav-item {
+      position: relative;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* tulisan menu = link ke halaman */
+    .nav-link {
+      padding: 10px 0;
+      font-size: 18px;
+      font-weight: 500;
+    }
+
+    .nav-link:hover {
+      text-decoration: underline;
+    }
+
+    /* panah kecil = tombol buka dropdown */
+    .nav-btn {
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .nav-btn:hover {
+      opacity: 0.6;
+    }
+
+    .nav-btn i {
+      font-size: 14px;
+      transition: transform 0.3s;
+    }
+
+    /* panah ▲ jadi ▼ saat dibuka */
+    .nav-btn.open i {
+      transform: rotate(180deg);
+    }
+
+    .nav-dropdown {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      min-width: 210px;
+      padding: 8px 0;
+      background: #fff;
+      border: 1px solid #d9d9d9;
+      border-radius: 8px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(-6px);
+      transition: opacity 0.25s, transform 0.25s, visibility 0.25s;
+      z-index: 20;
+    }
+
+    /* menu paling kanan dibuka ke arah kiri supaya tidak keluar layar */
+    .nav-item:last-child .nav-dropdown {
+      left: auto;
+      right: 0;
+    }
+
+    .nav-btn.open + .nav-dropdown {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+    }
+
+    .nav-dropdown a {
+      display: block;
+      padding: 10px 20px;
+      font-size: 16px;
+    }
+
+    .nav-dropdown a:hover {
+      background: #f2f2f2;
+    }
+
+    /* tombol hamburger */
+    .btn-menu {
+      width: 44px;
+      height: 44px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 7px;
+    }
+
+    .btn-menu span {
+      display: block;
+      width: 30px;
+      height: 3px;
+      background: #000;
+      border-radius: 3px;
+    }
+
+    /* ---------- sidebar menu (slide dari kiri) ---------- */
+    .overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.6);
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s, visibility 0.3s;
+      z-index: 150;
+    }
+
+    .overlay.show {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .sidebar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 80%;
+      max-width: 320px;
+      height: 100%;
+      background: #fff;
+      display: flex;
+      flex-direction: column;
+      transform: translateX(-100%);
+      visibility: hidden;
+      transition: transform 0.3s ease, visibility 0.3s;
+      z-index: 200;
+    }
+
+    .sidebar.open {
+      transform: translateX(0);
+      visibility: visible;
+    }
+
+    .sidebar-head {
+      height: 90px;
+      flex: none;
+      padding: 0 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid #000;
+    }
+
+    .btn-close {
+      width: 44px;
+      height: 44px;
+      border: 2px solid #000;
+      font-size: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .sidebar-menu {
+      padding: 10px 20px;
+      overflow-y: auto;
+    }
+
+    .sidebar-menu > li > a,
+    .dropdown-btn {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      width: 100%;
+      padding: 14px 0;
+      font-size: 18px;
+      font-weight: 500;
+      text-align: left;
+    }
+
+    .dropdown-btn i {
+      font-size: 16px;
+      transition: transform 0.3s;
+    }
+
+    /* panah ▲ jadi ▼ saat dibuka */
+    .dropdown-btn.open i {
+      transform: rotate(180deg);
+    }
+
+    .submenu {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease;
+    }
+
+    .submenu a {
+      display: block;
+      padding: 10px 0 10px 24px;
+      font-size: 15px;
+    }
+
+    .submenu a:hover,
+    .sidebar-menu > li > a:hover {
+      text-decoration: underline;
+    }
+
+    /* ---------- footer ---------- */
+    .footer {
+      padding: 40px 0 30px;
+    }
+
+    .footer-wrap {
+      display: grid;
+      grid-template-columns: 110px 1.3fr 0.8fr;
+      grid-template-areas:
+        "brand about product"
+        "brand service product"
+        "app app app";
+      column-gap: 14px;
+      row-gap: 16px;
+    }
+
+    .f-brand   { grid-area: brand; }
+    .f-about   { grid-area: about; }
+    .f-service { grid-area: service; }
+    .f-product { grid-area: product; }
+    .f-app     { grid-area: app; margin-top: 12px; }
+
+    .footer-img {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      margin-top: 14px;
+    }
+
+    .footer-img div {
+      height: 56px;
+      border-radius: 10px;
+      font-size: 22px;
+    }
+
+    .footer h3 {
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .footer li a {
+      display: block;
+      padding: 4px 0;
+      font-size: 13px;
+    }
+
+    .footer li a:hover {
+      text-decoration: underline;
+    }
+
+    .store-btn {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 22px;
+    }
+
+    .store-btn a {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: #000;
+      color: #fff;
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-size: 11px;
+    }
+
+    .store-btn i {
+      font-size: 24px;
+    }
+
+    .store-btn strong {
+      display: block;
+      font-size: 14px;
+    }
+
+    .sosmed {
+      display: flex;
+      gap: 14px;
+    }
+
+    .sosmed a {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: #000;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+    }
+
+    .sosmed a:hover {
+      background: #333;
+    }
+
+    .copyright {
+      background: #000;
+      color: #fff;
+      font-size: 12px;
+      font-weight: 600;
+      padding: 20px 0;
+    }
+
+    /* ---------- tombol wa melayang ---------- */
+    .wa-float {
+      position: fixed;
+      right: 16px;
+      bottom: 20px;
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: #000;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+      z-index: 100;
+    }
+
+    @media (min-width: 1024px) {
+      .navbar {
+        height: 100px;
+      }
+
+      .logo {
+        font-size: 28px;
+      }
+
+      .nav-links {
+        display: flex;
+      }
+
+      .btn-menu,
+      .sidebar,
+      .overlay {
+        display: none !important;
+      }
+
+      .footer {
+        padding: 55px 0;
+      }
+
+      .footer-wrap {
+        grid-template-columns: 1.4fr 0.9fr 0.9fr 1.1fr 1.5fr;
+        grid-template-areas: "brand product service about app";
+        column-gap: 30px;
+      }
+
+      .f-app {
+        margin-top: 0;
+      }
+
+      .footer-img {
+        flex-direction: row;
+        margin-top: 30px;
+      }
+
+      .footer-img div {
+        width: 150px;
+        height: 76px;
+      }
+
+      .footer h3 {
+        font-size: 22px;
+      }
+
+      .footer li a {
+        font-size: 18px;
+      }
+
+      .wa-float {
+        width: 70px;
+        height: 70px;
+        font-size: 34px;
+      }
+    }
+
+    /* ===================== CSS KHUSUS HALAMAN INI ===================== */
+    :root {
+      /* jarak dari tepi layar ke awal isi (sama dengan .container) */
+      --gutter: calc((100vw - min(90vw, 1200px)) / 2);
+    }
+
+    [hidden] {
+      display: none !important;
+    }
+
+    /* ---------- hero (gambar utama) ---------- */
+    .hero {
+      background: #d9d9d9;
+      height: 245px;
+      position: relative;
+    }
+
+    .hero .container {
+      height: 100%;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .btn-back {
+      position: absolute;
+      top: 18px;
+      left: 0;
+      width: 34px;
+      height: 34px;
+      border: 2px solid #000;
+      border-radius: 50%;
+      font-size: 15px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .btn-back:hover {
+      background: rgba(0, 0, 0, 0.1);
+    }
+
+    .hero-img {
+      width: 80px;
+      height: 80px;
+      border: 2px solid #b3b3b3;
+      border-radius: 14px;
+      background: none;
+      font-size: 34px;
+    }
+
+    /* ---------- judul & deskripsi ---------- */
+    .event-title {
+      text-align: center;
+      font-size: 30px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: -0.5px;
+      margin: 30px 0 18px;
+    }
+
+    .event-desc {
+      font-size: 13px;
+      line-height: 1.55;
+      text-align: justify;
+    }
+
+    .event-meta {
+      margin-top: 22px;
+    }
+
+    .event-meta dt {
+      font-size: 15px;
+      font-weight: 500;
+      margin-top: 14px;
+    }
+
+    .event-meta dt:first-child {
+      margin-top: 0;
+    }
+
+    .event-meta dd {
+      font-size: 15px;
+      font-weight: 700;
+      margin-top: 4px;
+    }
+
+    /* ---------- judul bagian (label abu-abu) ---------- */
+    .section {
+      margin-top: 28px;
+    }
+
+    .section-label {
+      display: inline-block;
+      background: #d9d9d9;
+      padding: 10px 24px 10px var(--gutter);
+      font-size: 15px;
+      font-weight: 700;
+      margin-bottom: 22px;
+    }
+
+    /* ---------- ticketing ---------- */
+    .ticket-img {
+      width: 100%;
+      aspect-ratio: 16 / 10;
+      border-radius: 4px;
+      font-size: 60px;
+    }
+
+    .ticket-info {
+      margin-top: 18px;
+    }
+
+    .ticket-info h3 {
+      font-size: 15px;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+
+    .ticket-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px 36px;
+    }
+
+    .ticket-list li {
+      font-size: 15px;
+      padding-left: 18px;
+      position: relative;
+    }
+
+    .ticket-list li::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 7px;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #000;
+    }
+
+    .ticket-list li strong {
+      display: block;
+      font-weight: 600;
+      margin-top: 2px;
+    }
+
+    .btn-buy {
+      display: inline-block;
+      margin-top: 18px;
+      padding: 10px 18px;
+      background: #999;
+      color: #fff;
+      border-radius: 30px;
+      font-size: 14px;
+      font-weight: 700;
+      text-align: center;
+    }
+
+    .btn-buy:hover {
+      background: #7a7a7a;
+    }
+
+    /* ---------- information (tombol pilihan) ---------- */
+    .info-tabs {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .info-tab {
+      min-height: 36px;
+      padding: 6px 14px;
+      background: #ececec;
+      border-radius: 30px;
+      font-size: 14px;
+      line-height: 1.15;
+      text-align: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .info-tab:hover {
+      background: #e0e0e0;
+    }
+
+    .info-tab.active {
+      background: #d9d9d9;
+      font-weight: 700;
+    }
+
+    .info-panel {
+      margin-top: 30px;
+    }
+
+    .info-list li {
+      position: relative;
+      padding-left: 24px;
+      margin-bottom: 18px;
+      font-size: 15px;
+      line-height: 1.6;
+    }
+
+    .info-list li::before {
+      content: "";
+      position: absolute;
+      left: 2px;
+      top: 9px;
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: #000;
+    }
+
+    .info-list strong {
+      display: block;
+      font-weight: 600;
+    }
+
+    .info-note {
+      font-size: 15px;
+      font-weight: 700;
+      line-height: 1.5;
+      margin-top: 6px;
+    }
+
+    .info-text {
+      font-size: 15px;
+      line-height: 1.6;
+    }
+
+    /* ---------- template ---------- */
+    .template-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .template-list a {
+      color: #f00;
+      font-size: 15px;
+      font-weight: 700;
+    }
+
+    .template-list a:hover {
+      text-decoration: underline;
+    }
+
+    .footer {
+      margin-top: 60px;
+    }
+
+    @media (min-width: 1024px) {
+      .hero {
+        height: 490px;
+      }
+
+      .btn-back {
+        top: 30px;
+        width: 40px;
+        height: 40px;
+        font-size: 17px;
+      }
+
+      .hero-img {
+        width: 310px;
+        height: 310px;
+        border-radius: 40px;
+        font-size: 100px;
+      }
+
+      .event-title {
+        font-size: 44px;
+        margin: 22px 0 28px;
+      }
+
+      /* deskripsi di kiri, tanggal & venue di kanan */
+      .detail-grid {
+        display: grid;
+        grid-template-columns: 1fr 300px;
+        gap: 44px;
+        align-items: start;
+      }
+
+      .event-desc {
+        font-size: 15px;
+      }
+
+      .event-meta {
+        margin-top: 0;
+      }
+
+      .event-meta dt,
+      .event-meta dd {
+        font-size: 18px;
+      }
+
+      .event-meta dt {
+        margin-top: 22px;
+      }
+
+      .section {
+        margin-top: 0;
+      }
+
+      .section-label {
+        font-size: 18px;
+        margin: 0 0 18px;
+      }
+
+      .section-wrap {
+        margin-top: 8px;
+      }
+
+      .ticket-img {
+        aspect-ratio: auto;
+        height: 490px;
+        font-size: 120px;
+      }
+
+      /* kategori tiket ada di samping gambar */
+      .ticket-info {
+        margin-top: 0;
+        padding-top: 28px;
+      }
+
+      .ticket-info h3 {
+        font-size: 18px;
+        margin-bottom: 10px;
+      }
+
+      .ticket-list {
+        flex-direction: column;
+        gap: 18px;
+      }
+
+      .ticket-list li {
+        font-size: 18px;
+      }
+
+      .ticket-list li::before {
+        top: 9px;
+        width: 11px;
+        height: 11px;
+      }
+
+      .btn-buy {
+        display: block;
+        margin-top: 32px;
+        padding: 16px 20px;
+        font-size: 18px;
+      }
+
+      /* tombol information: 3 kolom */
+      .info-tabs {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 20px 56px;
+        margin-top: 10px;
+      }
+
+      .info-tab {
+        min-height: 40px;
+        font-size: 18px;
+      }
+
+      .info-panel {
+        margin-top: 46px;
+      }
+
+      .info-list li,
+      .info-note,
+      .info-text {
+        font-size: 18px;
+      }
+
+      .info-list li::before {
+        top: 11px;
+      }
+
+      .template-list {
+        gap: 14px;
+      }
+
+      .template-list a {
+        font-size: 18px;
+      }
+
+      .footer {
+        margin-top: 90px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- navbar -->
+  <header class="navbar">
+    <div class="container">
+      <a href="webBBO_HOMEPAGE.html" class="logo">Logo</a>
+
+      <!-- menu desktop dengan dropdown -->
+      <nav class="nav-links" aria-label="Menu utama">
+        <div class="nav-item">
+          <a href="produk.html" class="nav-link">Products</a>
+          <button type="button" class="nav-btn" aria-expanded="false" aria-label="Buka menu Products">
+            <i class="fa-solid fa-caret-up"></i>
+          </button>
+          <ul class="nav-dropdown">
+            <li><a href="BBOEVENTS.html">BBO Events</a></li>
+            <li><a href="produk.html#jobs">BBO Jobs</a></li>
+            <li><a href="produk.html#toko">Toko BBO</a></li>
+            <li><a href="produk.html#pay">BBO Pay</a></li>
+          </ul>
+        </div>
+
+        <div class="nav-item">
+          <a href="#" class="nav-link">Our Services</a>
+          <button type="button" class="nav-btn" aria-expanded="false" aria-label="Buka menu Our Services">
+            <i class="fa-solid fa-caret-up"></i>
+          </button>
+          <ul class="nav-dropdown">
+            <li><a href="#">Login Dashboard</a></li>
+            <li><a href="#">Claim Code</a></li>
+          </ul>
+        </div>
+
+        <div class="nav-item">
+          <a href="#" class="nav-link">About Us</a>
+          <button type="button" class="nav-btn" aria-expanded="false" aria-label="Buka menu About Us">
+            <i class="fa-solid fa-caret-up"></i>
+          </button>
+          <ul class="nav-dropdown">
+            <li><a href="#">Privacy Policy</a></li>
+            <li><a href="#">Term and Conditions</a></li>
+            <li><a href="#">Contact Us</a></li>
+          </ul>
+        </div>
+      </nav>
+
+      <button class="btn-menu" id="btnMenu" aria-label="Buka menu" aria-expanded="false">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+  </header>
+
+  <!-- sidebar menu (muncul dari kiri) -->
+  <div class="overlay" id="overlay"></div>
+
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-head">
+      <a href="webBBO_HOMEPAGE.html" class="logo">Logo</a>
+      <button class="btn-close" id="btnClose" aria-label="Tutup menu">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </div>
+
+    <ul class="sidebar-menu">
+      <li><a href="webBBO_HOMEPAGE.html">Home</a></li>
+
+      <li>
+        <button class="dropdown-btn" id="btnAbout" aria-expanded="false">
+          About Us <i class="fa-solid fa-caret-up"></i>
+        </button>
+        <ul class="submenu">
+          <li><a href="#">Privacy Policy</a></li>
+          <li><a href="#">Term and Conditions</a></li>
+          <li><a href="#">Contact Us</a></li>
+        </ul>
+      </li>
+
+      <li>
+        <button class="dropdown-btn" aria-expanded="false">
+          Our Services <i class="fa-solid fa-caret-up"></i>
+        </button>
+        <ul class="submenu">
+          <li><a href="#">Login Dashboard</a></li>
+          <li><a href="#">Claim Code</a></li>
+        </ul>
+      </li>
+
+      <li>
+        <button class="dropdown-btn" aria-expanded="false">
+          Products <i class="fa-solid fa-caret-up"></i>
+        </button>
+        <ul class="submenu">
+          <li><a href="BBOEVENTS.html">BBO Events</a></li>
+          <li><a href="produk.html#jobs">BBO Jobs</a></li>
+          <li><a href="produk.html#toko">Toko BBO</a></li>
+          <li><a href="produk.html#pay">BBO Pay</a></li>
+        </ul>
+      </li>
+    </ul>
+  </aside>
+
+  <!-- hero (gambar utama) -->
+  <section class="hero">
+    <div class="container">
+      <a href="BBOEVENTS.html" class="btn-back" aria-label="Kembali ke BBO Events"><i class="fa-solid fa-arrow-left"></i></a>
+      <div class="hero-img placeholder"><i class="fa-regular fa-image"></i></div>
+    </div>
+  </section>
+
+  <!-- judul, deskripsi, tanggal & venue -->
+  <section class="container">
+    <h1 class="event-title">Judul Event</h1>
+
+    <div class="detail-grid">
+      <p class="event-desc">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+
+      <dl class="event-meta">
+        <dt>Date</dt>
+        <dd>Monday, 05 October 2026</dd>
+        <dt>Venue</dt>
+        <dd>GBK, Main Stadium</dd>
+      </dl>
+    </div>
+  </section>
+
+  <!-- ticketing -->
+  <section class="section section-wrap">
+    <h2 class="section-label">Ticketing</h2>
+
+    <div class="container detail-grid">
+      <div class="ticket-img placeholder"><i class="fa-regular fa-image"></i></div>
+
+      <div class="ticket-info">
+        <h3>Ticket Categories</h3>
+        <ul class="ticket-list">
+          <li>VIP PACKAGE <strong>IDR 3,300,000</strong></li>
+          <li>CAT 1 <strong>IDR 2,750,000</strong></li>
+          <li>CAT 2 <strong>IDR 2,750,000</strong></li>
+        </ul>
+        <a href="#" class="btn-buy">Buy ticket now</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- information -->
+  <section class="section">
+    <h2 class="section-label">Information</h2>
+
+    <div class="container">
+      <div class="info-tabs" id="infoTabs">
+          <button class="info-tab active" data-info="info-sales">Ticket Sales Schedule</button>
+          <button class="info-tab" data-info="info-purchase">Ticket Purchase Information</button>
+          <button class="info-tab" data-info="info-vip">Benefits for VIP Package</button>
+          <button class="info-tab" data-info="info-regulations">General Regulations</button>
+          <button class="info-tab" data-info="info-wristband">Wristband Redemption Information</button>
+          <button class="info-tab" data-info="info-age">Age Restrictions</button>
+          <button class="info-tab" data-info="info-special">Special Needs Service</button>
+          <button class="info-tab" data-info="info-guidelines">Concert Guidelines</button>
+          <button class="info-tab" data-info="info-policies">General Policies</button>
+      </div>
+
+        <div class="info-panel" id="info-sales">
+          <ul class="info-list">
+            <li>
+              <strong>Membership (GL) Pre-sale</strong>
+              April 05, 2026 (12:00 PM – 9:59 PM Jakarta Time) at bbo.co.id
+            </li>
+            <li>
+              <strong>General Sale</strong>
+              April 06, 2026 (12:00 PM Jakarta Time) at bbo.co.id
+            </li>
+          </ul>
+          <p class="info-note">All prices exclude 10% government tax and a 5% ticketing platform fee.</p>
+        </div>
+        <div class="info-panel" id="info-purchase" hidden>
+          <p class="info-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+        </div>
+        <div class="info-panel" id="info-vip" hidden>
+          <p class="info-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+        </div>
+        <div class="info-panel" id="info-regulations" hidden>
+          <p class="info-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+        </div>
+        <div class="info-panel" id="info-wristband" hidden>
+          <p class="info-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+        </div>
+        <div class="info-panel" id="info-age" hidden>
+          <p class="info-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+        </div>
+        <div class="info-panel" id="info-special" hidden>
+          <p class="info-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+        </div>
+        <div class="info-panel" id="info-guidelines" hidden>
+          <p class="info-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+        </div>
+        <div class="info-panel" id="info-policies" hidden>
+          <p class="info-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+        </div>
+    </div>
+  </section>
+
+  <!-- template -->
+  <section class="section">
+    <h2 class="section-label">Template</h2>
+
+    <div class="container">
+      <div class="template-list">
+        <a href="#">Letter of Attorney for Wristband Redemption Template</a>
+        <a href="#">Parental/spousal consent letter template</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- footer -->
+  <footer class="footer">
+    <div class="container footer-wrap">
+
+      <div class="f-brand">
+        <a href="webBBO_HOMEPAGE.html" class="logo">Logo</a>
+        <div class="footer-img">
+          <div class="placeholder"><i class="fa-regular fa-image"></i></div>
+          <div class="placeholder"><i class="fa-regular fa-image"></i></div>
+        </div>
+      </div>
+
+      <div class="f-about">
+        <h3>About Us</h3>
+        <ul>
+          <li><a href="#">Privacy Policy</a></li>
+          <li><a href="#">Term and Conditions</a></li>
+          <li><a href="#">Contact Us</a></li>
+        </ul>
+      </div>
+
+      <div class="f-service">
+        <h3>Our Services</h3>
+        <ul>
+          <li><a href="#">Login Dashboard</a></li>
+          <li><a href="#">Claim Code</a></li>
+        </ul>
+      </div>
+
+      <div class="f-product">
+        <h3>Products</h3>
+        <ul>
+          <li><a href="BBOEVENTS.html">BBO Events</a></li>
+          <li><a href="produk.html#jobs">BBO Jobs</a></li>
+          <li><a href="produk.html#toko">Toko BBO</a></li>
+          <li><a href="produk.html#pay">BBO Pay</a></li>
+        </ul>
+      </div>
+
+      <div class="f-app">
+        <h3>Download The BBO App</h3>
+        <div class="store-btn">
+          <a href="#">
+            <i class="fa-brands fa-apple"></i>
+            <span>Download on The<strong>APP Store</strong></span>
+          </a>
+          <a href="#">
+            <i class="fa-brands fa-google-play"></i>
+            <span>Get It On<strong>Google Play</strong></span>
+          </a>
+        </div>
+
+        <h3>Connect With Us</h3>
+        <div class="sosmed">
+          <a href="#" aria-label="WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
+          <a href="#" aria-label="Email"><i class="fa-regular fa-envelope"></i></a>
+          <a href="#" aria-label="TikTok"><i class="fa-brands fa-tiktok"></i></a>
+          <a href="#" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+        </div>
+      </div>
+
+    </div>
+  </footer>
+
+  <div class="copyright">
+    <div class="container">
+      Copyright © 2026 BBO - All rights reserved. Powered by bbo.co.id
+    </div>
+  </div>
+
+  <!-- tombol wa -->
+  <a href="#" class="wa-float" aria-label="Chat WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
+
+  <script>
+    // ---------- dropdown di header (desktop) ----------
+    // kalau satu dropdown dibuka, yang lain otomatis menutup
+    const navBtns = document.querySelectorAll('.nav-btn');
+
+    function tutupNav() {
+      navBtns.forEach(function (btn) {
+        btn.classList.remove('open');
+        btn.setAttribute('aria-expanded', 'false');
+      });
+    }
+
+    navBtns.forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        const sudahBuka = btn.classList.contains('open');
+        tutupNav();
+        if (!sudahBuka) {
+          btn.classList.add('open');
+          btn.setAttribute('aria-expanded', 'true');
+        }
+      });
+    });
+
+    // tutup saat salah satu link di dropdown diklik
+    document.querySelectorAll('.nav-dropdown a').forEach(function (link) {
+      link.addEventListener('click', tutupNav);
+    });
+
+    // tutup saat klik di luar menu
+    document.addEventListener('click', function (e) {
+      if (!e.target.closest('.nav-item')) tutupNav();
+    });
+
+    // ---------- sidebar menu (mobile) ----------
+    const btnMenu = document.getElementById('btnMenu');
+    const btnClose = document.getElementById('btnClose');
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('overlay');
+
+    function bukaSidebar() {
+      sidebar.classList.add('open');
+      overlay.classList.add('show');
+      document.body.style.overflow = 'hidden';
+      btnMenu.setAttribute('aria-expanded', 'true');
+    }
+
+    function tutupSidebar() {
+      sidebar.classList.remove('open');
+      overlay.classList.remove('show');
+      document.body.style.overflow = '';
+      btnMenu.setAttribute('aria-expanded', 'false');
+    }
+
+    btnMenu.addEventListener('click', bukaSidebar);
+    btnClose.addEventListener('click', tutupSidebar);
+    overlay.addEventListener('click', tutupSidebar);
+
+    // tutup sidebar saat salah satu link diklik
+    sidebar.querySelectorAll('a').forEach(function (link) {
+      link.addEventListener('click', tutupSidebar);
+    });
+
+    // tutup semua menu saat tekan Esc
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') {
+        tutupSidebar();
+        tutupNav();
+      }
+    });
+
+    // tutup otomatis saat ukuran layar berubah
+    window.addEventListener('resize', function () {
+      if (window.innerWidth >= 1024) {
+        tutupSidebar();
+      } else {
+        tutupNav();
+      }
+    });
+
+    // ---------- dropdown di sidebar ----------
+    const dropdownBtns = document.querySelectorAll('.dropdown-btn');
+
+    function bukaDropdown(btn) {
+      const isi = btn.nextElementSibling;
+      btn.classList.add('open');
+      btn.setAttribute('aria-expanded', 'true');
+      isi.style.maxHeight = isi.scrollHeight + 'px';
+    }
+
+    function tutupDropdown(btn) {
+      const isi = btn.nextElementSibling;
+      btn.classList.remove('open');
+      btn.setAttribute('aria-expanded', 'false');
+      isi.style.maxHeight = null;
+    }
+
+    dropdownBtns.forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        const sudahBuka = btn.classList.contains('open');
+        dropdownBtns.forEach(tutupDropdown);
+        if (!sudahBuka) bukaDropdown(btn);
+      });
+    });
+
+    // About Us terbuka dari awal, seperti di coretan
+    // (hapus baris ini kalau mau semuanya tertutup)
+    bukaDropdown(document.getElementById('btnAbout'));
+
+
+    // ---------- tombol Information (ganti isi yang tampil) ----------
+    const infoTabs = document.querySelectorAll('.info-tab');
+    const infoPanels = document.querySelectorAll('.info-panel');
+
+    infoTabs.forEach(function (tab) {
+      tab.addEventListener('click', function () {
+        infoTabs.forEach(function (t) { t.classList.remove('active'); });
+        tab.classList.add('active');
+
+        infoPanels.forEach(function (panel) {
+          panel.hidden = panel.id !== tab.dataset.info;
+        });
+      });
+    });
+  </script>
+
+</body>
+</html>
