@@ -1,0 +1,1698 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BBO - Buy Ticket</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    /* ===================== CSS BERSAMA (semua halaman) ===================== */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', Arial, Helvetica, sans-serif;
+      color: #000;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    ul {
+      list-style: none;
+    }
+
+    button,
+    input {
+      font-family: inherit;
+    }
+
+    button {
+      background: none;
+      border: none;
+      color: inherit;
+      cursor: pointer;
+    }
+
+    .container {
+      width: 90%;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .placeholder {
+      background-color: #d9d9d9;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #b3b3b3;
+      font-size: 40px;
+    }
+
+    /* ---------- navbar ---------- */
+    .navbar {
+      height: 90px;
+      background: #fff;
+      position: relative;
+      z-index: 50;
+    }
+
+    .navbar .container {
+      height: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      font-size: 24px;
+      font-weight: 800;
+    }
+
+    /* menu desktop (muncul di layar besar saja) */
+    .nav-links {
+      display: none;
+      gap: 50px;
+      align-items: center;
+    }
+
+    .nav-item {
+      position: relative;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* tulisan menu = link ke halaman */
+    .nav-link {
+      padding: 10px 0;
+      font-size: 18px;
+      font-weight: 500;
+    }
+
+    .nav-link:hover {
+      text-decoration: underline;
+    }
+
+    /* panah kecil = tombol buka dropdown */
+    .nav-btn {
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .nav-btn:hover {
+      opacity: 0.6;
+    }
+
+    .nav-btn i {
+      font-size: 14px;
+      transition: transform 0.3s;
+    }
+
+    /* panah ▲ jadi ▼ saat dibuka */
+    .nav-btn.open i {
+      transform: rotate(180deg);
+    }
+
+    .nav-dropdown {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      min-width: 210px;
+      padding: 8px 0;
+      background: #fff;
+      border: 1px solid #d9d9d9;
+      border-radius: 8px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(-6px);
+      transition: opacity 0.25s, transform 0.25s, visibility 0.25s;
+      z-index: 20;
+    }
+
+    /* menu paling kanan dibuka ke arah kiri supaya tidak keluar layar */
+    .nav-item:last-child .nav-dropdown {
+      left: auto;
+      right: 0;
+    }
+
+    .nav-btn.open + .nav-dropdown {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+    }
+
+    .nav-dropdown a {
+      display: block;
+      padding: 10px 20px;
+      font-size: 16px;
+    }
+
+    .nav-dropdown a:hover {
+      background: #f2f2f2;
+    }
+
+    /* tombol hamburger */
+    .btn-menu {
+      width: 44px;
+      height: 44px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 7px;
+    }
+
+    .btn-menu span {
+      display: block;
+      width: 30px;
+      height: 3px;
+      background: #000;
+      border-radius: 3px;
+    }
+
+    /* ---------- sidebar menu (slide dari kiri) ---------- */
+    .overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.6);
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s, visibility 0.3s;
+      z-index: 150;
+    }
+
+    .overlay.show {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .sidebar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 80%;
+      max-width: 320px;
+      height: 100%;
+      background: #fff;
+      display: flex;
+      flex-direction: column;
+      transform: translateX(-100%);
+      visibility: hidden;
+      transition: transform 0.3s ease, visibility 0.3s;
+      z-index: 200;
+    }
+
+    .sidebar.open {
+      transform: translateX(0);
+      visibility: visible;
+    }
+
+    .sidebar-head {
+      height: 90px;
+      flex: none;
+      padding: 0 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid #000;
+    }
+
+    .btn-close {
+      width: 44px;
+      height: 44px;
+      border: 2px solid #000;
+      font-size: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .sidebar-menu {
+      padding: 10px 20px;
+      overflow-y: auto;
+    }
+
+    .sidebar-menu > li > a,
+    .dropdown-btn {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      width: 100%;
+      padding: 14px 0;
+      font-size: 18px;
+      font-weight: 500;
+      text-align: left;
+    }
+
+    .dropdown-btn i {
+      font-size: 16px;
+      transition: transform 0.3s;
+    }
+
+    /* panah ▲ jadi ▼ saat dibuka */
+    .dropdown-btn.open i {
+      transform: rotate(180deg);
+    }
+
+    .submenu {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease;
+    }
+
+    .submenu a {
+      display: block;
+      padding: 10px 0 10px 24px;
+      font-size: 15px;
+    }
+
+    .submenu a:hover,
+    .sidebar-menu > li > a:hover {
+      text-decoration: underline;
+    }
+
+    /* ---------- footer ---------- */
+    .footer {
+      padding: 40px 0 30px;
+    }
+
+    .footer-wrap {
+      display: grid;
+      grid-template-columns: 110px 1.3fr 0.8fr;
+      grid-template-areas:
+        "brand about product"
+        "brand service product"
+        "app app app";
+      column-gap: 14px;
+      row-gap: 16px;
+    }
+
+    .f-brand   { grid-area: brand; }
+    .f-about   { grid-area: about; }
+    .f-service { grid-area: service; }
+    .f-product { grid-area: product; }
+    .f-app     { grid-area: app; margin-top: 12px; }
+
+    .footer-img {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      margin-top: 14px;
+    }
+
+    .footer-img div {
+      height: 56px;
+      border-radius: 10px;
+      font-size: 22px;
+    }
+
+    .footer h3 {
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .footer li a {
+      display: block;
+      padding: 4px 0;
+      font-size: 13px;
+    }
+
+    .footer li a:hover {
+      text-decoration: underline;
+    }
+
+    .store-btn {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 22px;
+    }
+
+    .store-btn a {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: #000;
+      color: #fff;
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-size: 11px;
+    }
+
+    .store-btn i {
+      font-size: 24px;
+    }
+
+    .store-btn strong {
+      display: block;
+      font-size: 14px;
+    }
+
+    .sosmed {
+      display: flex;
+      gap: 14px;
+    }
+
+    .sosmed a {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: #000;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+    }
+
+    .sosmed a:hover {
+      background: #333;
+    }
+
+    .copyright {
+      background: #000;
+      color: #fff;
+      font-size: 12px;
+      font-weight: 600;
+      padding: 20px 0;
+    }
+
+    /* ---------- tombol wa melayang ---------- */
+    .wa-float {
+      position: fixed;
+      right: 16px;
+      bottom: 20px;
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: #000;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+      z-index: 100;
+    }
+
+    @media (min-width: 1024px) {
+      .navbar {
+        height: 100px;
+      }
+
+      .logo {
+        font-size: 28px;
+      }
+
+      .nav-links {
+        display: flex;
+      }
+
+      .btn-menu,
+      .sidebar,
+      .overlay {
+        display: none !important;
+      }
+
+      .footer {
+        padding: 55px 0;
+      }
+
+      .footer-wrap {
+        grid-template-columns: 1.4fr 0.9fr 0.9fr 1.1fr 1.5fr;
+        grid-template-areas: "brand product service about app";
+        column-gap: 30px;
+      }
+
+      .f-app {
+        margin-top: 0;
+      }
+
+      .footer-img {
+        flex-direction: row;
+        margin-top: 30px;
+      }
+
+      .footer-img div {
+        width: 150px;
+        height: 76px;
+      }
+
+      .footer h3 {
+        font-size: 22px;
+      }
+
+      .footer li a {
+        font-size: 18px;
+      }
+
+      .wa-float {
+        width: 70px;
+        height: 70px;
+        font-size: 34px;
+      }
+    }
+
+    /* ===================== CSS KHUSUS HALAMAN INI ===================== */
+    [hidden] {
+      display: none !important;
+    }
+
+    .page {
+      padding-bottom: 20px;
+    }
+
+    /* ---------- breadcrumb ---------- */
+    .breadcrumb {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 14px;
+      margin: 6px 0 16px;
+    }
+
+    .breadcrumb a:hover {
+      text-decoration: underline;
+    }
+
+    .breadcrumb span {
+      width: 2px;
+      height: 18px;
+      background: #000;
+    }
+
+    .breadcrumb strong {
+      font-weight: 700;
+    }
+
+    /* ---------- info tanggal & venue ---------- */
+    .info-bar {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      padding: 16px 20px;
+      background: #f4f4f4;
+      border-radius: 12px;
+      margin-bottom: 16px;
+    }
+
+    .info-bar dt {
+      font-size: 15px;
+      font-weight: 500;
+    }
+
+    .info-bar dd {
+      font-size: 15px;
+      font-weight: 700;
+      line-height: 1.5;
+      margin-top: 2px;
+    }
+
+    /* ---------- susunan halaman ---------- */
+    .booking {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 16px;
+    }
+
+    .box {
+      background: #f4f4f4;
+      border-radius: 12px;
+    }
+
+    /* ---------- venue (bisa dibuka-tutup) ---------- */
+    .venue-btn {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      padding: 14px 20px;
+      font-size: 16px;
+      font-weight: 700;
+      text-align: left;
+    }
+
+    .venue-btn i {
+      font-size: 15px;
+      transition: transform 0.3s;
+    }
+
+    .venue-btn[aria-expanded="true"] i {
+      transform: rotate(180deg);
+    }
+
+    .venue-body {
+      padding: 0 20px 20px;
+    }
+
+    .venue-img {
+      width: 100%;
+      aspect-ratio: 5 / 4;
+      font-size: 70px;
+    }
+
+    /* ---------- kategori tiket ---------- */
+    .cats h2 {
+      font-size: 16px;
+      font-weight: 700;
+      padding: 8px 20px 14px;
+    }
+
+    .ticket-card {
+      padding: 24px 20px 22px;
+      background: #f4f4f4;
+      border-radius: 12px;
+      margin-bottom: 16px;
+    }
+
+    .ticket-name {
+      font-size: 22px;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+
+    .ticket-note {
+      font-size: 13px;
+      line-height: 1.5;
+      margin-top: 6px;
+    }
+
+    .ticket-tags {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      margin-top: 6px;
+      font-size: 11px;
+      color: #555;
+    }
+
+    .ticket-tags i {
+      margin-right: 4px;
+      color: #000;
+    }
+
+    .ticket-tags strong {
+      color: #000;
+    }
+
+    .qty-label {
+      font-size: 15px;
+      font-weight: 700;
+      margin-top: 12px;
+    }
+
+    .qty {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      margin-top: 6px;
+    }
+
+    .qty-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 8px 10px;
+      background: #d9d9d9;
+      border-radius: 10px;
+    }
+
+    .qty-date {
+      padding: 5px 8px;
+      background: #f4f4f4;
+      border-radius: 4px;
+      font-size: 11px;
+      white-space: nowrap;
+    }
+
+    .qty-price {
+      font-size: 13px;
+      white-space: nowrap;
+    }
+
+    .qty-price strong {
+      font-size: 16px;
+      font-weight: 700;
+    }
+
+    .qty-price small {
+      font-size: 11px;
+    }
+
+    .stepper {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 14px;
+    }
+
+    .stepper output {
+      min-width: 16px;
+      text-align: center;
+      font-size: 16px;
+      font-weight: 700;
+    }
+
+    .step-btn {
+      width: 34px;
+      height: 34px;
+      border: 1.5px solid #000;
+      border-radius: 50%;
+      font-size: 13px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .step-btn:hover {
+      background: rgba(0, 0, 0, 0.08);
+    }
+
+    /* ---------- form details ---------- */
+    .details {
+      padding: 22px 20px 20px;
+    }
+
+    .details h2 {
+      font-size: 16px;
+      font-weight: 800;
+    }
+
+    .details h3 {
+      font-size: 15px;
+      font-weight: 600;
+      margin-top: 2px;
+    }
+
+    .field {
+      margin-top: 14px;
+      padding: 0 8px;
+    }
+
+    .field label {
+      display: block;
+      font-size: 14px;
+      margin-bottom: 4px;
+    }
+
+    .input {
+      width: 100%;
+      height: 42px;
+      padding: 0 20px;
+      background: #fff;
+      border: 1px solid #b3b3b3;
+      border-radius: 30px;
+      font-size: 14px;
+      outline: none;
+    }
+
+    .input::placeholder {
+      color: #c4c4c4;
+    }
+
+    .input:focus {
+      border-color: #000;
+    }
+
+    .phone {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .phone select {
+      width: 200px;
+      max-width: 100%;
+      appearance: none;
+      -webkit-appearance: none;
+      background: #fff url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='14' height='9' viewBox='0 0 14 9'><path d='M1 1l6 6 6-6' fill='none' stroke='black' stroke-width='2'/></svg>") no-repeat right 18px center;
+      color: #000;
+    }
+
+    .pay-title {
+      font-size: 16px;
+      font-weight: 600;
+      margin-top: 28px;
+    }
+
+    .pay-list {
+      margin-top: 8px;
+      padding: 0 8px;
+    }
+
+    .pay-opt {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 8px 0;
+      cursor: pointer;
+    }
+
+    .pay-opt input {
+      position: absolute;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .radio-dot {
+      flex: none;
+      width: 30px;
+      height: 30px;
+      border: 1px solid #b3b3b3;
+      border-radius: 50%;
+      background: #fff;
+      position: relative;
+    }
+
+    .pay-opt input:checked + .radio-dot::after {
+      content: "";
+      position: absolute;
+      inset: 6px;
+      border-radius: 50%;
+      background: #000;
+    }
+
+    .pay-opt input:focus-visible + .radio-dot {
+      outline: 2px solid #000;
+      outline-offset: 2px;
+    }
+
+    .pay-logo {
+      flex: none;
+      width: 40px;
+      height: 26px;
+      font-size: 10px;
+      font-weight: 700;
+      color: #555;
+    }
+
+    .pay-name {
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .see-all-pay {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 8px;
+      width: 100%;
+      margin-top: 8px;
+      padding: 12px 8px 0;
+      border-top: 1px dashed #999;
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    .see-all-pay i {
+      transition: transform 0.3s;
+    }
+
+    .see-all-pay[aria-expanded="true"] i {
+      transform: rotate(180deg);
+    }
+
+    .pay-wrap {
+      margin: 0 8px;
+    }
+
+    .pay-wrap .pay-list,
+    .pay-wrap .see-all-pay {
+      margin-left: 0;
+      margin-right: 0;
+    }
+
+    /* ---------- persetujuan & tombol bayar ---------- */
+    .agree {
+      padding: 4px 8px 0;
+    }
+
+    .check {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      margin-top: 12px;
+      font-size: 14px;
+      line-height: 1.4;
+      cursor: pointer;
+    }
+
+    .check input {
+      flex: none;
+      appearance: none;
+      -webkit-appearance: none;
+      width: 28px;
+      height: 28px;
+      margin: 0;
+      background: #fff;
+      border: 1px solid #999;
+      border-radius: 2px;
+      cursor: pointer;
+      display: grid;
+      place-content: center;
+    }
+
+    .check input:checked::before {
+      content: "\2713";
+      font-size: 18px;
+      font-weight: 700;
+      line-height: 1;
+    }
+
+    .check a {
+      font-weight: 700;
+    }
+
+    .check a:hover {
+      text-decoration: underline;
+    }
+
+    .btn-pay {
+      display: block;
+      width: 100%;
+      margin-top: 18px;
+      padding: 14px 20px;
+      background: #999;
+      color: #fff;
+      border-radius: 40px;
+      font-size: 18px;
+      font-weight: 700;
+      cursor: not-allowed;
+    }
+
+    .btn-pay:not(:disabled) {
+      background: #000;
+      cursor: pointer;
+    }
+
+    .footer {
+      margin-top: 70px;
+    }
+
+    @media (min-width: 1024px) {
+      .breadcrumb {
+        font-size: 20px;
+        margin: 20px 0 40px;
+      }
+
+      .breadcrumb span {
+        height: 26px;
+      }
+
+      .info-bar {
+        padding: 24px 50px;
+        margin-bottom: 20px;
+      }
+
+      .info-bar dt {
+        font-size: 24px;
+        font-weight: 500;
+      }
+
+      .info-bar dd {
+        font-size: 24px;
+        margin-top: 4px;
+      }
+
+      /* kiri: kategori tiket, kanan: venue + form + tombol bayar */
+      .booking {
+        grid-template-columns: 1fr 1fr;
+        grid-template-areas:
+          "cats venue"
+          "cats details"
+          "cats pay";
+        grid-template-rows: auto auto 1fr;
+        gap: 0 20px;
+        align-items: start;
+      }
+
+      .cats    { grid-area: cats; }
+      .venue-box { grid-area: venue; margin-bottom: 36px; }
+      .details { grid-area: details; }
+      .pay-area { grid-area: pay; }
+
+      .cats h2 {
+        font-size: 24px;
+        padding: 0 50px 28px;
+      }
+
+      .ticket-card {
+        padding: 36px 50px 36px;
+        margin-bottom: 20px;
+      }
+
+      .ticket-name {
+        font-size: 28px;
+      }
+
+      .ticket-note {
+        font-size: 15px;
+        margin-top: 8px;
+      }
+
+      .ticket-tags {
+        flex-direction: row;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 4px 12px;
+        font-size: 11px;
+        margin-top: 8px;
+      }
+
+      .ticket-tags li + li {
+        padding-left: 12px;
+        border-left: 1px solid #999;
+      }
+
+      .qty-label {
+        font-size: 16px;
+        margin-top: 22px;
+      }
+
+      /* tanggal, harga, dan jumlah satu baris dalam kotak abu-abu */
+      .qty {
+        flex-direction: row;
+        align-items: center;
+        gap: 0;
+        padding: 8px 10px;
+        background: #d9d9d9;
+        border-radius: 10px;
+      }
+
+      .qty-bar {
+        flex: 1;
+        padding: 0;
+        background: none;
+        border-radius: 0;
+      }
+
+      .qty-date {
+        font-size: 11px;
+        padding: 6px 14px;
+      }
+
+      .qty-price strong {
+        font-size: 15px;
+      }
+
+      .stepper {
+        gap: 8px;
+        margin-left: 10px;
+      }
+
+      .stepper output {
+        font-size: 15px;
+      }
+
+      .step-btn {
+        width: 20px;
+        height: 20px;
+        border-width: 1px;
+        font-size: 9px;
+      }
+
+      .venue-btn {
+        padding: 30px 50px 18px;
+        font-size: 26px;
+        justify-content: flex-start;
+        gap: 10px;
+      }
+
+      .venue-btn i {
+        font-size: 20px;
+      }
+
+      .venue-body {
+        padding: 0 50px 42px;
+      }
+
+      .venue-img {
+        aspect-ratio: auto;
+        height: 400px;
+        font-size: 110px;
+      }
+
+      .details {
+        padding: 36px 40px 28px;
+      }
+
+      .details h2 {
+        font-size: 26px;
+      }
+
+      .details h3 {
+        font-size: 24px;
+        font-weight: 600;
+      }
+
+      .field {
+        margin-top: 18px;
+        padding: 0 0 0 26px;
+      }
+
+      .field label {
+        font-size: 15px;
+      }
+
+      .input {
+        height: 40px;
+      }
+
+      .phone {
+        flex-direction: row;
+      }
+
+      .phone select {
+        flex: 0 0 250px;
+        width: 250px;
+      }
+
+      .phone input {
+        flex: 1;
+        min-width: 0;
+      }
+
+      .pay-title {
+        font-size: 24px;
+        margin-top: 38px;
+      }
+
+      .pay-list {
+        padding: 0;
+      }
+
+      .pay-wrap {
+        margin: 0 0 0 26px;
+      }
+
+      .pay-name {
+        font-size: 15px;
+      }
+
+      .agree {
+        padding: 22px 0 0 43px;
+      }
+
+      .check {
+        font-size: 20px;
+        margin-top: 8px;
+      }
+
+      .check input {
+        width: 30px;
+        height: 30px;
+      }
+
+      .btn-pay {
+        margin-top: 22px;
+        padding: 18px 20px;
+        font-size: 26px;
+      }
+
+      .footer {
+        margin-top: 110px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- navbar -->
+  <header class="navbar">
+    <div class="container">
+      <a href="webBBO_HOMEPAGE.html" class="logo">Logo</a>
+
+      <!-- menu desktop dengan dropdown -->
+      <nav class="nav-links" aria-label="Menu utama">
+        <div class="nav-item">
+          <a href="produk.html" class="nav-link">Products</a>
+          <button type="button" class="nav-btn" aria-expanded="false" aria-label="Buka menu Products">
+            <i class="fa-solid fa-caret-up"></i>
+          </button>
+          <ul class="nav-dropdown">
+            <li><a href="BBOEVENTS.html">BBO Events</a></li>
+            <li><a href="produk.html#jobs">BBO Jobs</a></li>
+            <li><a href="produk.html#toko">Toko BBO</a></li>
+            <li><a href="produk.html#pay">BBO Pay</a></li>
+          </ul>
+        </div>
+
+        <div class="nav-item">
+          <a href="#" class="nav-link">Our Services</a>
+          <button type="button" class="nav-btn" aria-expanded="false" aria-label="Buka menu Our Services">
+            <i class="fa-solid fa-caret-up"></i>
+          </button>
+          <ul class="nav-dropdown">
+            <li><a href="#">Login Dashboard</a></li>
+            <li><a href="#">Claim Code</a></li>
+          </ul>
+        </div>
+
+        <div class="nav-item">
+          <a href="#" class="nav-link">About Us</a>
+          <button type="button" class="nav-btn" aria-expanded="false" aria-label="Buka menu About Us">
+            <i class="fa-solid fa-caret-up"></i>
+          </button>
+          <ul class="nav-dropdown">
+            <li><a href="#">Privacy Policy</a></li>
+            <li><a href="#">Term and Conditions</a></li>
+            <li><a href="#">Contact Us</a></li>
+          </ul>
+        </div>
+      </nav>
+
+      <button class="btn-menu" id="btnMenu" aria-label="Buka menu" aria-expanded="false">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+  </header>
+
+  <!-- sidebar menu (muncul dari kiri) -->
+  <div class="overlay" id="overlay"></div>
+
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-head">
+      <a href="webBBO_HOMEPAGE.html" class="logo">Logo</a>
+      <button class="btn-close" id="btnClose" aria-label="Tutup menu">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </div>
+
+    <ul class="sidebar-menu">
+      <li><a href="webBBO_HOMEPAGE.html">Home</a></li>
+
+      <li>
+        <button class="dropdown-btn" id="btnAbout" aria-expanded="false">
+          About Us <i class="fa-solid fa-caret-up"></i>
+        </button>
+        <ul class="submenu">
+          <li><a href="#">Privacy Policy</a></li>
+          <li><a href="#">Term and Conditions</a></li>
+          <li><a href="#">Contact Us</a></li>
+        </ul>
+      </li>
+
+      <li>
+        <button class="dropdown-btn" aria-expanded="false">
+          Our Services <i class="fa-solid fa-caret-up"></i>
+        </button>
+        <ul class="submenu">
+          <li><a href="#">Login Dashboard</a></li>
+          <li><a href="#">Claim Code</a></li>
+        </ul>
+      </li>
+
+      <li>
+        <button class="dropdown-btn" aria-expanded="false">
+          Products <i class="fa-solid fa-caret-up"></i>
+        </button>
+        <ul class="submenu">
+          <li><a href="BBOEVENTS.html">BBO Events</a></li>
+          <li><a href="produk.html#jobs">BBO Jobs</a></li>
+          <li><a href="produk.html#toko">Toko BBO</a></li>
+          <li><a href="produk.html#pay">BBO Pay</a></li>
+        </ul>
+      </li>
+    </ul>
+  </aside>
+
+  <main class="container page">
+
+    <!-- breadcrumb -->
+    <nav class="breadcrumb" aria-label="Breadcrumb">
+      <a href="BBOEVENTS.html">BBO Events</a>
+      <span></span>
+      <a href="detail-BBOEVENTS.html"><strong>Judul Events</strong></a>
+    </nav>
+
+    <!-- tanggal & venue -->
+    <dl class="info-bar">
+      <div>
+        <dt>Date</dt>
+        <dd>Monday, 05 October 2026</dd>
+      </div>
+      <div>
+        <dt>Venue</dt>
+        <dd>GBK, Main Stadium</dd>
+      </div>
+    </dl>
+
+    <form class="booking" id="bookingForm" novalidate>
+
+      <!-- venue (desktop: terbuka, mobile: tertutup) -->
+      <section class="box venue-box">
+        <button type="button" class="venue-btn" id="btnVenue" aria-expanded="true" aria-controls="venueBody">
+          Venue <i class="fa-solid fa-chevron-down"></i>
+        </button>
+        <div class="venue-body" id="venueBody">
+          <div class="venue-img placeholder"><i class="fa-regular fa-image"></i></div>
+        </div>
+      </section>
+
+      <!-- kategori tiket -->
+      <section class="cats">
+        <h2>Categories</h2>
+
+        <article class="ticket-card">
+          <h3 class="ticket-name">VIP PACKAGE</h3>
+          <p class="ticket-note">Ticket prices shown includes Government Tax 10%, Platform Fee 6%, but does not include Convenience Fee.</p>
+          <ul class="ticket-tags">
+            <li><i class="fa-solid fa-ban"></i>Refund not allowed</li>
+            <li><i class="fa-solid fa-people-group"></i><strong>Standing</strong></li>
+            <li>All tickets are for standing area only.</li>
+          </ul>
+
+          <p class="qty-label">Ticket Quantity</p>
+          <div class="qty">
+            <div class="qty-bar">
+              <span class="qty-date">Monday, 05 October 2026</span>
+              <span class="qty-price"><strong>IDR 3,300,000</strong> <small>/pax</small></span>
+            </div>
+            <div class="stepper">
+              <button type="button" class="step-btn" data-step="-1" aria-label="Kurangi tiket VIP PACKAGE"><i class="fa-solid fa-minus"></i></button>
+              <output>1</output>
+              <button type="button" class="step-btn" data-step="1" aria-label="Tambah tiket VIP PACKAGE"><i class="fa-solid fa-plus"></i></button>
+            </div>
+          </div>
+        </article>
+
+        <article class="ticket-card">
+          <h3 class="ticket-name">CAT 1</h3>
+          <p class="ticket-note">Ticket prices shown includes Government Tax 10%, Platform Fee 6%, but does not include Convenience Fee.</p>
+          <ul class="ticket-tags">
+            <li><i class="fa-solid fa-ban"></i>Refund not allowed</li>
+            <li><i class="fa-solid fa-people-group"></i><strong>Standing</strong></li>
+            <li>All tickets are for standing area only.</li>
+          </ul>
+
+          <p class="qty-label">Ticket Quantity</p>
+          <div class="qty">
+            <div class="qty-bar">
+              <span class="qty-date">Monday, 05 October 2026</span>
+              <span class="qty-price"><strong>IDR 2,750,000</strong> <small>/pax</small></span>
+            </div>
+            <div class="stepper">
+              <button type="button" class="step-btn" data-step="-1" aria-label="Kurangi tiket CAT 1"><i class="fa-solid fa-minus"></i></button>
+              <output>1</output>
+              <button type="button" class="step-btn" data-step="1" aria-label="Tambah tiket CAT 1"><i class="fa-solid fa-plus"></i></button>
+            </div>
+          </div>
+        </article>
+
+        <article class="ticket-card">
+          <h3 class="ticket-name">CAT 2</h3>
+          <p class="ticket-note">Ticket prices shown includes Government Tax 10%, Platform Fee 6%, but does not include Convenience Fee.</p>
+          <ul class="ticket-tags">
+            <li><i class="fa-solid fa-ban"></i>Refund not allowed</li>
+            <li><i class="fa-solid fa-people-group"></i><strong>Standing</strong></li>
+            <li>All tickets are for standing area only.</li>
+          </ul>
+
+          <p class="qty-label">Ticket Quantity</p>
+          <div class="qty">
+            <div class="qty-bar">
+              <span class="qty-date">Monday, 05 October 2026</span>
+              <span class="qty-price"><strong>IDR 2,750,000</strong> <small>/pax</small></span>
+            </div>
+            <div class="stepper">
+              <button type="button" class="step-btn" data-step="-1" aria-label="Kurangi tiket CAT 2"><i class="fa-solid fa-minus"></i></button>
+              <output>1</output>
+              <button type="button" class="step-btn" data-step="1" aria-label="Tambah tiket CAT 2"><i class="fa-solid fa-plus"></i></button>
+            </div>
+          </div>
+        </article>
+      </section>
+
+      <!-- form -->
+      <section class="box details">
+        <h2>Details</h2>
+        <h3>Personal Info</h3>
+
+        <div class="field">
+          <label for="nama">Name *</label>
+          <input class="input" type="text" id="nama" name="nama" placeholder="Name" autocomplete="name" required>
+        </div>
+
+        <div class="field">
+          <label for="email">Email address *</label>
+          <input class="input" type="email" id="email" name="email" placeholder="Email address" autocomplete="email" required>
+        </div>
+
+        <div class="field">
+          <label for="email2">Retype Email address *</label>
+          <input class="input" type="email" id="email2" name="email2" placeholder="Email address" autocomplete="email" required>
+        </div>
+
+        <div class="field">
+          <label for="kodeNegara">Phone *</label>
+          <div class="phone">
+            <select class="input" id="kodeNegara" name="kodeNegara" aria-label="Kode negara">
+              <option value="+62" selected>Indonesia (+62)</option>
+              <option value="+60">Malaysia (+60)</option>
+              <option value="+65">Singapore (+65)</option>
+              <option value="+66">Thailand (+66)</option>
+              <option value="+63">Philippines (+63)</option>
+              <option value="+61">Australia (+61)</option>
+              <option value="+1">United States (+1)</option>
+            </select>
+            <input class="input" type="tel" id="telepon" name="telepon" placeholder="08123456789" autocomplete="tel-national" inputmode="numeric" required>
+          </div>
+        </div>
+
+        <h3 class="pay-title">Payment Method</h3>
+        <div class="pay-wrap">
+          <div class="pay-list">
+            <label class="pay-opt">
+              <input type="radio" name="payment" value="bbopay" required>
+              <span class="radio-dot"></span>
+              <span class="pay-logo placeholder">Logo</span>
+              <span class="pay-name">BBO Pay</span>
+            </label>
+            <label class="pay-opt">
+              <input type="radio" name="payment" value="card" required>
+              <span class="radio-dot"></span>
+              <span class="pay-logo placeholder">Logo</span>
+              <span class="pay-name">Use Credit/Debit Card</span>
+            </label>
+            <label class="pay-opt">
+              <input type="radio" name="payment" value="bca" required>
+              <span class="radio-dot"></span>
+              <span class="pay-logo placeholder">Logo</span>
+              <span class="pay-name">BCA Virtual Account</span>
+            </label>
+          </div>
+          <div class="pay-list" id="payMore" hidden>
+            <label class="pay-opt">
+              <input type="radio" name="payment" value="mandiri" required>
+              <span class="radio-dot"></span>
+              <span class="pay-logo placeholder">Logo</span>
+              <span class="pay-name">Mandiri Virtual Account</span>
+            </label>
+            <label class="pay-opt">
+              <input type="radio" name="payment" value="bni" required>
+              <span class="radio-dot"></span>
+              <span class="pay-logo placeholder">Logo</span>
+              <span class="pay-name">BNI Virtual Account</span>
+            </label>
+            <label class="pay-opt">
+              <input type="radio" name="payment" value="bri" required>
+              <span class="radio-dot"></span>
+              <span class="pay-logo placeholder">Logo</span>
+              <span class="pay-name">BRI Virtual Account</span>
+            </label>
+          </div>
+          <button type="button" class="see-all-pay" id="btnPayMore" aria-expanded="false" aria-controls="payMore">
+            <span id="payMoreText">See all</span> <i class="fa-solid fa-chevron-down"></i>
+          </button>
+        </div>
+      </section>
+
+      <!-- persetujuan & tombol bayar -->
+      <div class="pay-area">
+        <div class="agree">
+          <label class="check">
+            <input type="checkbox" id="cekData">
+            <span>I have filled the personal info correctly</span>
+          </label>
+          <label class="check">
+            <input type="checkbox" id="cekSyarat">
+            <span>I have read and agreed with the <a href="#">Terms and Conditions</a></span>
+          </label>
+        </div>
+
+        <button type="submit" class="btn-pay" id="btnPay" disabled>Pay now</button>
+      </div>
+
+    </form>
+  </main>
+
+  <!-- footer -->
+  <footer class="footer">
+    <div class="container footer-wrap">
+
+      <div class="f-brand">
+        <a href="webBBO_HOMEPAGE.html" class="logo">Logo</a>
+        <div class="footer-img">
+          <div class="placeholder"><i class="fa-regular fa-image"></i></div>
+          <div class="placeholder"><i class="fa-regular fa-image"></i></div>
+        </div>
+      </div>
+
+      <div class="f-about">
+        <h3>About Us</h3>
+        <ul>
+          <li><a href="#">Privacy Policy</a></li>
+          <li><a href="#">Term and Conditions</a></li>
+          <li><a href="#">Contact Us</a></li>
+        </ul>
+      </div>
+
+      <div class="f-service">
+        <h3>Our Services</h3>
+        <ul>
+          <li><a href="#">Login Dashboard</a></li>
+          <li><a href="#">Claim Code</a></li>
+        </ul>
+      </div>
+
+      <div class="f-product">
+        <h3>Products</h3>
+        <ul>
+          <li><a href="BBOEVENTS.html">BBO Events</a></li>
+          <li><a href="produk.html#jobs">BBO Jobs</a></li>
+          <li><a href="produk.html#toko">Toko BBO</a></li>
+          <li><a href="produk.html#pay">BBO Pay</a></li>
+        </ul>
+      </div>
+
+      <div class="f-app">
+        <h3>Download The BBO App</h3>
+        <div class="store-btn">
+          <a href="#">
+            <i class="fa-brands fa-apple"></i>
+            <span>Download on The<strong>APP Store</strong></span>
+          </a>
+          <a href="#">
+            <i class="fa-brands fa-google-play"></i>
+            <span>Get It On<strong>Google Play</strong></span>
+          </a>
+        </div>
+
+        <h3>Connect With Us</h3>
+        <div class="sosmed">
+          <a href="#" aria-label="WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
+          <a href="#" aria-label="Email"><i class="fa-regular fa-envelope"></i></a>
+          <a href="#" aria-label="TikTok"><i class="fa-brands fa-tiktok"></i></a>
+          <a href="#" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+        </div>
+      </div>
+
+    </div>
+  </footer>
+
+  <div class="copyright">
+    <div class="container">
+      Copyright © 2026 BBO - All rights reserved. Powered by bbo.co.id
+    </div>
+  </div>
+
+  <!-- tombol wa -->
+  <a href="#" class="wa-float" aria-label="Chat WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
+
+  <script>
+    // ---------- dropdown di header (desktop) ----------
+    // kalau satu dropdown dibuka, yang lain otomatis menutup
+    const navBtns = document.querySelectorAll('.nav-btn');
+
+    function tutupNav() {
+      navBtns.forEach(function (btn) {
+        btn.classList.remove('open');
+        btn.setAttribute('aria-expanded', 'false');
+      });
+    }
+
+    navBtns.forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        const sudahBuka = btn.classList.contains('open');
+        tutupNav();
+        if (!sudahBuka) {
+          btn.classList.add('open');
+          btn.setAttribute('aria-expanded', 'true');
+        }
+      });
+    });
+
+    // tutup saat salah satu link di dropdown diklik
+    document.querySelectorAll('.nav-dropdown a').forEach(function (link) {
+      link.addEventListener('click', tutupNav);
+    });
+
+    // tutup saat klik di luar menu
+    document.addEventListener('click', function (e) {
+      if (!e.target.closest('.nav-item')) tutupNav();
+    });
+
+    // ---------- sidebar menu (mobile) ----------
+    const btnMenu = document.getElementById('btnMenu');
+    const btnClose = document.getElementById('btnClose');
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('overlay');
+
+    function bukaSidebar() {
+      sidebar.classList.add('open');
+      overlay.classList.add('show');
+      document.body.style.overflow = 'hidden';
+      btnMenu.setAttribute('aria-expanded', 'true');
+    }
+
+    function tutupSidebar() {
+      sidebar.classList.remove('open');
+      overlay.classList.remove('show');
+      document.body.style.overflow = '';
+      btnMenu.setAttribute('aria-expanded', 'false');
+    }
+
+    btnMenu.addEventListener('click', bukaSidebar);
+    btnClose.addEventListener('click', tutupSidebar);
+    overlay.addEventListener('click', tutupSidebar);
+
+    // tutup sidebar saat salah satu link diklik
+    sidebar.querySelectorAll('a').forEach(function (link) {
+      link.addEventListener('click', tutupSidebar);
+    });
+
+    // tutup semua menu saat tekan Esc
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') {
+        tutupSidebar();
+        tutupNav();
+      }
+    });
+
+    // tutup otomatis saat ukuran layar berubah
+    window.addEventListener('resize', function () {
+      if (window.innerWidth >= 1024) {
+        tutupSidebar();
+      } else {
+        tutupNav();
+      }
+    });
+
+    // ---------- dropdown di sidebar ----------
+    const dropdownBtns = document.querySelectorAll('.dropdown-btn');
+
+    function bukaDropdown(btn) {
+      const isi = btn.nextElementSibling;
+      btn.classList.add('open');
+      btn.setAttribute('aria-expanded', 'true');
+      isi.style.maxHeight = isi.scrollHeight + 'px';
+    }
+
+    function tutupDropdown(btn) {
+      const isi = btn.nextElementSibling;
+      btn.classList.remove('open');
+      btn.setAttribute('aria-expanded', 'false');
+      isi.style.maxHeight = null;
+    }
+
+    dropdownBtns.forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        const sudahBuka = btn.classList.contains('open');
+        dropdownBtns.forEach(tutupDropdown);
+        if (!sudahBuka) bukaDropdown(btn);
+      });
+    });
+
+    // About Us terbuka dari awal, seperti di coretan
+    // (hapus baris ini kalau mau semuanya tertutup)
+    bukaDropdown(document.getElementById('btnAbout'));
+
+
+    // ---------- venue: buka / tutup (desktop terbuka, mobile tertutup dari awal) ----------
+    const btnVenue = document.getElementById('btnVenue');
+    const venueBody = document.getElementById('venueBody');
+
+    function aturVenue(buka) {
+      venueBody.hidden = !buka;
+      btnVenue.setAttribute('aria-expanded', buka ? 'true' : 'false');
+    }
+
+    btnVenue.addEventListener('click', function () {
+      aturVenue(venueBody.hidden);
+    });
+
+    aturVenue(window.innerWidth >= 1024);
+
+    // ---------- jumlah tiket (tombol - dan +) ----------
+    document.querySelectorAll('.stepper').forEach(function (stepper) {
+      const angka = stepper.querySelector('output');
+
+      stepper.querySelectorAll('.step-btn').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          const baru = Number(angka.textContent) + Number(btn.dataset.step);
+          angka.textContent = Math.min(10, Math.max(0, baru));
+        });
+      });
+    });
+
+    // ---------- payment method: See all ----------
+    const btnPayMore = document.getElementById('btnPayMore');
+    const payMore = document.getElementById('payMore');
+    const payMoreText = document.getElementById('payMoreText');
+
+    btnPayMore.addEventListener('click', function () {
+      const buka = payMore.hidden;
+      payMore.hidden = !buka;
+      btnPayMore.setAttribute('aria-expanded', buka ? 'true' : 'false');
+      payMoreText.textContent = buka ? 'See less' : 'See all';
+    });
+
+    // ---------- tombol Pay now aktif kalau dua kotak persetujuan dicentang ----------
+    const cekData = document.getElementById('cekData');
+    const cekSyarat = document.getElementById('cekSyarat');
+    const btnPay = document.getElementById('btnPay');
+
+    function aturTombolBayar() {
+      btnPay.disabled = !(cekData.checked && cekSyarat.checked);
+    }
+
+    cekData.addEventListener('change', aturTombolBayar);
+    cekSyarat.addEventListener('change', aturTombolBayar);
+
+    // ---------- kirim form ----------
+    // (sementara belum ke mana-mana, tinggal sambungkan ke pembayaran / backend nanti)
+    document.getElementById('bookingForm').addEventListener('submit', function (e) {
+      e.preventDefault();
+
+      const email = document.getElementById('email');
+      const email2 = document.getElementById('email2');
+      email2.setCustomValidity(email.value === email2.value ? '' : 'Email tidak sama');
+
+      if (!e.target.checkValidity()) {
+        e.target.reportValidity();
+        return;
+      }
+    });
+  </script>
+
+</body>
+</html>
