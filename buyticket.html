@@ -481,8 +481,9 @@
     /* ---------- breadcrumb ---------- */
     .breadcrumb {
       display: flex;
+      flex-wrap: wrap;
       align-items: center;
-      gap: 8px;
+      gap: 6px 8px;
       font-size: 14px;
       margin: 6px 0 16px;
     }
@@ -1241,7 +1242,9 @@
     <nav class="breadcrumb" aria-label="Breadcrumb">
       <a href="BBOEVENTS.html">BBO Events</a>
       <span></span>
-      <a href="detail-BBOEVENTS.html"><strong>Judul Events</strong></a>
+      <a href="detail-BBOEVENTS.html">Detail Events</a>
+      <span></span>
+      <strong aria-current="page">Judul Events</strong>
     </nav>
 
     <!-- tanggal & venue -->
