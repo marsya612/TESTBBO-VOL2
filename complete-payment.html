@@ -185,32 +185,9 @@
       margin-top: 16px;
     }
 
-    .summary {
-      display: grid;
-      grid-template-columns: 130px 1fr;
-      gap: 12px 10px;
-      margin-top: 16px;
-      padding-left: 6px;
-      font-size: 14px;
-    }
 
-    .summary dt {
-      font-weight: 600;
-    }
 
-    .summary dd span {
-      display: block;
-      line-height: 1.4;
-      word-break: break-word;
-    }
 
-    .summary dd span + span {
-      margin-top: 8px;
-    }
-
-    .summary dt.multi {
-      align-self: start;
-    }
 
     /* payment instructions */
     .pi-row {
@@ -332,6 +309,234 @@
       line-height: 1.7;
     }
 
+    /* ---------- package details ---------- */
+    .event-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px 18px;
+      margin-top: 8px;
+      font-size: 13px;
+      color: #555;
+    }
+
+    .event-meta i {
+      margin-right: 4px;
+      color: #000;
+    }
+
+    .pkg-head-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-top: 22px;
+    }
+
+    .pkg-head-row h4 {
+      margin-top: 0;
+    }
+
+    .btn-expand {
+      padding: 6px 14px;
+      background: #fff;
+      border: 1px solid #b3b3b3;
+      border-radius: 30px;
+      font-size: 13px;
+      font-weight: 600;
+      transition: background 0.2s;
+    }
+
+    .btn-expand:hover {
+      background: #e8e8e8;
+    }
+
+    .pkg-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .pkg {
+      background: #fff;
+      border: 1px solid #e0e0e0;
+      border-radius: 12px;
+      overflow: hidden;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .pkg.open {
+      border-color: #999;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+    }
+
+    .pkg-btn {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      width: 100%;
+      padding: 14px;
+      text-align: left;
+    }
+
+    .pkg-icon {
+      flex: none;
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      background: #d9d9d9;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 17px;
+    }
+
+    .pkg-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .pkg-name {
+      display: block;
+      font-size: 15px;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    .pkg-sub {
+      display: block;
+      margin-top: 2px;
+      font-size: 12px;
+      color: #666;
+    }
+
+    .pkg-sum {
+      flex: none;
+      font-size: 14px;
+      font-weight: 700;
+      text-align: right;
+    }
+
+    .pkg-chevron {
+      flex: none;
+      font-size: 13px;
+      transition: transform 0.3s;
+    }
+
+    .pkg.open .pkg-chevron {
+      transform: rotate(180deg);
+    }
+
+    .pkg-body {
+      padding: 0 14px 16px;
+    }
+
+    .pkg-rows {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 8px 16px;
+      padding-top: 12px;
+      border-top: 1px dashed #b3b3b3;
+      font-size: 13px;
+    }
+
+    .pkg-rows dt {
+      color: #666;
+    }
+
+    .pkg-rows dd {
+      font-weight: 600;
+      text-align: right;
+    }
+
+    .pkg-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .tag {
+      padding: 4px 10px;
+      background: #ececec;
+      border-radius: 30px;
+      font-size: 11px;
+      font-weight: 600;
+    }
+
+    .tag i {
+      margin-right: 4px;
+    }
+
+    .pkg-note {
+      margin-top: 10px;
+      font-size: 11px;
+      line-height: 1.5;
+      color: #666;
+    }
+
+    .pkg-total {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-top: 14px;
+      padding: 14px 16px;
+      background: #d9d9d9;
+      border-radius: 12px;
+    }
+
+    .pkg-total-label {
+      display: block;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .pkg-total-sub {
+      display: block;
+      margin-top: 2px;
+      font-size: 12px;
+      color: #555;
+    }
+
+    .pkg-total strong {
+      font-size: 20px;
+      font-weight: 800;
+      text-align: right;
+    }
+
+    .personal-title {
+      margin-top: 22px;
+    }
+
+    .personal {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .personal li {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 14px;
+      font-weight: 500;
+      word-break: break-word;
+    }
+
+    .personal i {
+      flex: none;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: #d9d9d9;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+    }
+
     .btn-main {
       margin-top: 40px;
     }
@@ -415,17 +620,6 @@
         margin-top: 0;
       }
 
-      .summary {
-        grid-template-columns: 224px 1fr;
-        gap: 18px 10px;
-        margin-top: 22px;
-        padding-left: 28px;
-        font-size: 20px;
-      }
-
-      .summary dt {
-        font-weight: 500;
-      }
 
       .pi-row {
         margin-top: 24px;
@@ -485,6 +679,109 @@
         padding: 22px 20px;
         font-size: 24px;
       }
+
+      /* package details (desktop) */
+      .event-meta {
+        font-size: 17px;
+        margin-top: 12px;
+      }
+
+      .pkg-head-row {
+        margin-top: 30px;
+      }
+
+      .btn-expand {
+        font-size: 16px;
+        padding: 8px 20px;
+      }
+
+      .pkg-list {
+        gap: 14px;
+        margin-top: 20px;
+      }
+
+      .pkg-btn {
+        padding: 18px 22px;
+        gap: 16px;
+      }
+
+      .pkg-icon {
+        width: 52px;
+        height: 52px;
+        font-size: 21px;
+      }
+
+      .pkg-name {
+        font-size: 22px;
+      }
+
+      .pkg-sub {
+        font-size: 16px;
+      }
+
+      .pkg-sum {
+        font-size: 20px;
+      }
+
+      .pkg-chevron {
+        font-size: 16px;
+      }
+
+      .pkg-body {
+        padding: 0 22px 22px;
+      }
+
+      .pkg-rows {
+        font-size: 18px;
+        gap: 12px 20px;
+        padding-top: 18px;
+      }
+
+      .tag {
+        font-size: 14px;
+        padding: 6px 14px;
+      }
+
+      .pkg-note {
+        font-size: 14px;
+      }
+
+      .pkg-total {
+        margin-top: 20px;
+        padding: 20px 26px;
+      }
+
+      .pkg-total-label {
+        font-size: 22px;
+      }
+
+      .pkg-total-sub {
+        font-size: 16px;
+      }
+
+      .pkg-total strong {
+        font-size: 30px;
+      }
+
+      .personal-title {
+        margin-top: 34px;
+      }
+
+      .personal {
+        gap: 14px;
+        margin-top: 16px;
+      }
+
+      .personal li {
+        font-size: 20px;
+        gap: 16px;
+      }
+
+      .personal i {
+        width: 42px;
+        height: 42px;
+        font-size: 16px;
+      }
     }
   </style>
 </head>
@@ -519,25 +816,28 @@
       <!-- order summary -->
       <section class="box b-summary">
         <h3 id="sumJudul">Judul Events</h3>
-        <h4>Package Details</h4>
+        <p class="event-meta">
+          <span><i class="fa-regular fa-calendar"></i> Monday, 05 October 2026</span>
+          <span><i class="fa-solid fa-location-dot"></i> GBK, Main Stadium</span>
+        </p>
 
-        <dl class="summary">
-          <dt>Categories</dt>
-          <dd id="sumKategori"><span>VIP PACKAGE</span></dd>
+        <div class="pkg-head-row">
+          <h4>Package Details</h4>
+          <button type="button" class="btn-expand" id="btnExpand">Expand all</button>
+        </div>
 
-          <dt>Ticket Quantity</dt>
-          <dd id="sumQty"><span>1 Pax</span></dd>
+        <ul class="pkg-list" id="pkgList"></ul>
 
-          <dt>Total Payment</dt>
-          <dd id="sumTotal"><span>IDR 3,300,000</span></dd>
+        <div class="pkg-total">
+          <div>
+            <span class="pkg-total-label">Total Payment</span>
+            <span class="pkg-total-sub" id="sumPax">1 Pax</span>
+          </div>
+          <strong id="sumTotal">IDR 3,300,000</strong>
+        </div>
 
-          <dt class="multi">Personal Info</dt>
-          <dd id="sumPersonal">
-            <span>haloworld</span>
-            <span>haloworld@gmail.com</span>
-            <span>08123456789</span>
-          </dd>
-        </dl>
+        <h4 class="personal-title">Personal Info</h4>
+        <ul class="personal" id="sumPersonal"></ul>
       </section>
 
       <!-- payment instructions -->
@@ -638,31 +938,174 @@
       return 'IDR ' + Number(angka).toLocaleString('en-US');
     }
 
-    // isi satu <dd> dengan beberapa baris teks (aman dari karakter HTML)
-    function isiBaris(id, daftar) {
-      const el = document.getElementById(id);
-      el.textContent = '';
-      daftar.forEach(function (teks) {
-        const span = document.createElement('span');
-        span.textContent = teks;
-        el.appendChild(span);
+    // contoh data (dipakai kalau halaman dibuka tanpa lewat halaman buy ticket)
+    const contoh = {
+      judul: 'Judul Events',
+      tiket: [{ nama: 'VIP PACKAGE', qty: 1, harga: 3300000 }],
+      total: 3300000,
+      nama: 'haloworld',
+      email: 'haloworld@gmail.com',
+      kodeNegara: '',
+      telepon: '08123456789'
+    };
+
+    const data = (order && order.tiket && order.tiket.length) ? order : contoh;
+
+    // helper: buat elemen dengan teks (aman dari karakter HTML)
+    function buat(tag, kelas, teks) {
+      const el = document.createElement(tag);
+      if (kelas) el.className = kelas;
+      if (teks !== undefined) el.textContent = teks;
+      return el;
+    }
+
+    function ikon(kelas) {
+      const i = document.createElement('i');
+      i.className = kelas;
+      return i;
+    }
+
+    document.getElementById('sumJudul').textContent = data.judul || 'Judul Events';
+
+    // ---------- package details: satu kartu per kategori, bisa dibuka-tutup ----------
+    const pkgList = document.getElementById('pkgList');
+    let totalPax = 0;
+
+    data.tiket.forEach(function (t, i) {
+      totalPax += t.qty;
+      const subtotal = t.qty * t.harga;
+      const idBody = 'pkgBody' + i;
+
+      const li = buat('li', 'pkg');
+
+      // kepala kartu (tombol)
+      const btn = buat('button', 'pkg-btn');
+      btn.type = 'button';
+      btn.setAttribute('aria-controls', idBody);
+
+      const icon = buat('span', 'pkg-icon');
+      icon.appendChild(ikon('fa-solid fa-ticket'));
+
+      const info = buat('span', 'pkg-info');
+      info.appendChild(buat('span', 'pkg-name', t.nama));
+      info.appendChild(buat('span', 'pkg-sub', t.qty + ' Pax × ' + formatRupiah(t.harga)));
+
+      btn.appendChild(icon);
+      btn.appendChild(info);
+      btn.appendChild(buat('span', 'pkg-sum', formatRupiah(subtotal)));
+      btn.appendChild(ikon('fa-solid fa-chevron-down pkg-chevron'));
+
+      // isi detail
+      const body = buat('div', 'pkg-body');
+      body.id = idBody;
+
+      const rows = buat('dl', 'pkg-rows');
+      [
+        ['Category', t.nama],
+        ['Price per pax', formatRupiah(t.harga)],
+        ['Ticket quantity', t.qty + ' Pax'],
+        ['Ticket date', 'Monday, 05 October 2026'],
+        ['Subtotal', formatRupiah(subtotal)]
+      ].forEach(function (baris) {
+        rows.appendChild(buat('dt', '', baris[0]));
+        rows.appendChild(buat('dd', '', baris[1]));
       });
+
+      const tags = buat('div', 'pkg-tags');
+      const tagStanding = buat('span', 'tag');
+      tagStanding.appendChild(ikon('fa-solid fa-people-group'));
+      tagStanding.appendChild(document.createTextNode('Standing'));
+      const tagRefund = buat('span', 'tag');
+      tagRefund.appendChild(ikon('fa-solid fa-ban'));
+      tagRefund.appendChild(document.createTextNode('Refund not allowed'));
+      tags.appendChild(tagStanding);
+      tags.appendChild(tagRefund);
+
+      const catatan = buat('p', 'pkg-note', 'Price includes Government Tax 10% and Platform Fee 6%, but does not include Convenience Fee. All tickets are for standing area only.');
+
+      body.appendChild(rows);
+      body.appendChild(tags);
+      body.appendChild(catatan);
+
+      li.appendChild(btn);
+      li.appendChild(body);
+      pkgList.appendChild(li);
+
+      // buka-tutup satu kartu
+      btn.addEventListener('click', function () {
+        aturKartu(li, body.hidden);
+        perbaruiTombolExpand();
+      });
+
+      // kartu pertama terbuka dari awal
+      aturKartu(li, i === 0);
+    });
+
+    function aturKartu(li, buka) {
+      li.classList.toggle('open', buka);
+      li.querySelector('.pkg-body').hidden = !buka;
+      li.querySelector('.pkg-btn').setAttribute('aria-expanded', buka ? 'true' : 'false');
     }
 
-    if (order && order.tiket && order.tiket.length) {
-      document.getElementById('sumJudul').textContent = order.judul || 'Judul Events';
+    // ---------- tombol Expand all / Collapse all ----------
+    const btnExpand = document.getElementById('btnExpand');
+    const semuaKartu = pkgList.querySelectorAll('.pkg');
 
-      isiBaris('sumKategori', order.tiket.map(function (t) { return t.nama; }));
-      isiBaris('sumQty', order.tiket.map(function (t) { return t.qty + ' Pax'; }));
-      isiBaris('sumTotal', [formatRupiah(order.total)]);
-
-      const telepon = String(order.telepon || '').replace(/^0/, '');
-      isiBaris('sumPersonal', [order.nama, order.email, order.kodeNegara + ' ' + telepon]);
-
-      document.getElementById('piTotal').textContent = formatRupiah(order.total);
-      document.getElementById('piBank').textContent = order.metode || 'BCA Virtual Account';
-      document.getElementById('piVa').textContent = order.va || '7777 8888 9999 0000';
+    function semuaTerbuka() {
+      return Array.prototype.every.call(semuaKartu, function (li) { return li.classList.contains('open'); });
     }
+
+    function perbaruiTombolExpand() {
+      btnExpand.textContent = semuaTerbuka() ? 'Collapse all' : 'Expand all';
+    }
+
+    btnExpand.addEventListener('click', function () {
+      const buka = !semuaTerbuka();
+      semuaKartu.forEach(function (li) { aturKartu(li, buka); });
+      perbaruiTombolExpand();
+    });
+
+    perbaruiTombolExpand();
+
+    // ---------- total pembayaran (angka naik pelan-pelan) ----------
+    document.getElementById('sumPax').textContent = totalPax + ' Pax';
+    document.getElementById('piTotal').textContent = formatRupiah(data.total);
+
+    const elTotal = document.getElementById('sumTotal');
+    const gerakKurang = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    if (gerakKurang) {
+      elTotal.textContent = formatRupiah(data.total);
+    } else {
+      const mulai = performance.now();
+      (function naik(sekarang) {
+        const p = Math.min(1, (sekarang - mulai) / 800);
+        const nilai = Math.round(data.total * (1 - Math.pow(1 - p, 3)));
+        elTotal.textContent = formatRupiah(nilai);
+        if (p < 1) requestAnimationFrame(naik);
+      })(mulai);
+    }
+
+    // ---------- personal info ----------
+    const telepon = data.kodeNegara
+      ? data.kodeNegara + ' ' + String(data.telepon || '').replace(/^0/, '')
+      : data.telepon;
+
+    const personal = document.getElementById('sumPersonal');
+    [
+      ['fa-solid fa-user', data.nama],
+      ['fa-regular fa-envelope', data.email],
+      ['fa-solid fa-phone', telepon]
+    ].forEach(function (baris) {
+      const li = buat('li');
+      li.appendChild(ikon(baris[0]));
+      li.appendChild(buat('span', '', baris[1]));
+      personal.appendChild(li);
+    });
+
+    // ---------- payment instructions ----------
+    document.getElementById('piBank').textContent = data.metode || 'BCA Virtual Account';
+    document.getElementById('piVa').textContent = data.va || '7777 8888 9999 0000';
 
     // ---------- batas waktu & hitung mundur (10 menit) ----------
     let batas = Number(sessionStorage.getItem('bbo_deadline'));
