@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BBO - Complete Payment</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    /* ===================== CSS BERSAMA ===================== */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', Arial, Helvetica, sans-serif;
+      color: #000;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    ul,
+    ol {
+      list-style: none;
+    }
+
+    button {
+      font-family: inherit;
+      background: none;
+      border: none;
+      color: inherit;
+      cursor: pointer;
+    }
+
+    [hidden] {
+      display: none !important;
+    }
+
+    .container {
+      width: 90%;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .placeholder {
+      background-color: #d9d9d9;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #b3b3b3;
+    }
+
+    /* tombol abu-abu panjang (Check the payment status / Done) */
+    .btn-main {
+      display: block;
+      width: 100%;
+      padding: 16px 20px;
+      background: #999;
+      color: #fff;
+      border-radius: 40px;
+      font-size: 16px;
+      font-weight: 700;
+      text-align: center;
+      transition: background 0.2s;
+    }
+
+    .btn-main:hover {
+      background: #777;
+    }
+
+    .btn-main:disabled {
+      background: #c9c9c9;
+      cursor: not-allowed;
+    }
+
+    /* ===================== CSS KHUSUS HALAMAN INI ===================== */
+    .page {
+      padding: 24px 0 50px;
+    }
+
+    .logo {
+      display: inline-block;
+      font-size: 24px;
+      font-weight: 800;
+    }
+
+    .breadcrumb {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 6px 8px;
+      margin: 14px 0 16px;
+      font-size: 14px;
+    }
+
+    .breadcrumb a:hover {
+      text-decoration: underline;
+    }
+
+    .breadcrumb span {
+      width: 2px;
+      height: 18px;
+      background: #000;
+    }
+
+    .breadcrumb strong {
+      font-weight: 700;
+    }
+
+    /* ---------- hitung mundur ---------- */
+    .countdown {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 14px 16px;
+      background: #f4f4f4;
+      border-radius: 12px;
+    }
+
+    .countdown-title {
+      font-size: 16px;
+      font-weight: 600;
+    }
+
+    .timer {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-weight: 700;
+      font-size: 18px;
+    }
+
+    .timer span {
+      min-width: 36px;
+      padding: 4px 6px;
+      background: #b3b3b3;
+      border-radius: 6px;
+      text-align: center;
+    }
+
+    .timer b {
+      font-weight: 700;
+    }
+
+    .timer.habis span {
+      background: #e0b4b4;
+    }
+
+    /* ---------- order summary & payment method ---------- */
+    .cols {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 0;
+      margin-top: 26px;
+    }
+
+    .heading {
+      font-size: 18px;
+      font-weight: 500;
+      margin: 0 0 14px;
+    }
+
+    .box {
+      padding: 22px 20px;
+      background: #f4f4f4;
+      border-radius: 12px;
+      margin-bottom: 26px;
+    }
+
+    .box h3 {
+      font-size: 18px;
+      font-weight: 600;
+    }
+
+    .box h4 {
+      font-size: 17px;
+      font-weight: 600;
+      margin-top: 16px;
+    }
+
+    .summary {
+      display: grid;
+      grid-template-columns: 130px 1fr;
+      gap: 12px 10px;
+      margin-top: 16px;
+      padding-left: 6px;
+      font-size: 14px;
+    }
+
+    .summary dt {
+      font-weight: 600;
+    }
+
+    .summary dd span {
+      display: block;
+      line-height: 1.4;
+      word-break: break-word;
+    }
+
+    .summary dd span + span {
+      margin-top: 8px;
+    }
+
+    .summary dt.multi {
+      align-self: start;
+    }
+
+    /* payment instructions */
+    .pi-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-top: 18px;
+      font-size: 14px;
+    }
+
+    .pi-row strong {
+      font-weight: 600;
+    }
+
+    .chip {
+      padding: 6px 14px;
+      background: #d9d9d9;
+      border-radius: 4px;
+      font-size: 13px;
+    }
+
+    .pi-label {
+      margin-top: 14px;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .pi-box {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-top: 6px;
+      padding: 10px 16px;
+      background: #d9d9d9;
+      font-size: 18px;
+      font-weight: 500;
+    }
+
+    .pi-box.va {
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+    }
+
+    .bank {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin: 8px 0 12px 6px;
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .bank .placeholder {
+      padding: 6px 12px;
+      font-size: 12px;
+      font-weight: 700;
+      color: #555;
+    }
+
+    .btn-copy {
+      flex: none;
+      width: 36px;
+      height: 36px;
+      font-size: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 6px;
+    }
+
+    .btn-copy:hover {
+      background: rgba(0, 0, 0, 0.1);
+    }
+
+    /* ---------- how to pay ---------- */
+    .howto {
+      padding: 6px 20px;
+      background: #f4f4f4;
+      border-radius: 12px;
+    }
+
+    .acc-item + .acc-item,
+    .acc-item:not(:last-child) {
+      border-bottom: 1px solid #555;
+    }
+
+    .acc-btn {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      padding: 20px 0;
+      font-size: 17px;
+      font-weight: 600;
+      text-align: left;
+    }
+
+    .acc-btn i {
+      font-size: 15px;
+      transition: transform 0.3s;
+    }
+
+    .acc-btn[aria-expanded="true"] i {
+      transform: rotate(180deg);
+    }
+
+    .acc-body {
+      padding: 0 0 18px 6px;
+    }
+
+    .acc-body ol {
+      list-style: decimal;
+      padding-left: 24px;
+      font-size: 14px;
+      line-height: 1.7;
+    }
+
+    .btn-main {
+      margin-top: 40px;
+    }
+
+    @media (min-width: 1024px) {
+      .page {
+        padding: 36px 0 70px;
+      }
+
+      .logo {
+        font-size: 30px;
+      }
+
+      .breadcrumb {
+        font-size: 20px;
+        margin: 18px 0 20px;
+      }
+
+      .breadcrumb span {
+        height: 26px;
+      }
+
+      .countdown {
+        padding: 14px 40px 14px 34px;
+      }
+
+      .countdown-title {
+        font-size: 24px;
+        font-weight: 500;
+      }
+
+      .timer {
+        font-size: 26px;
+        gap: 8px;
+      }
+
+      .timer span {
+        min-width: 40px;
+        padding: 2px 6px;
+      }
+
+      .cols {
+        grid-template-columns: 1fr 1fr;
+        grid-template-areas:
+          "h1 h2"
+          "b1 b2";
+        gap: 0 24px;
+        margin-top: 48px;
+        align-items: start;
+      }
+
+      .cols .h-summary { grid-area: h1; }
+      .cols .h-method  { grid-area: h2; }
+      .cols .b-summary { grid-area: b1; }
+      .cols .b-method  { grid-area: b2; }
+
+      .heading {
+        font-size: 26px;
+        margin: 0 0 24px;
+      }
+
+      .h-method {
+        padding-left: 50px;
+      }
+
+      .box {
+        padding: 34px 36px 36px;
+        margin-bottom: 40px;
+      }
+
+      .box h3 {
+        font-size: 26px;
+      }
+
+      .box h4 {
+        font-size: 26px;
+        margin-top: 26px;
+      }
+
+      .b-method h4 {
+        margin-top: 0;
+      }
+
+      .summary {
+        grid-template-columns: 224px 1fr;
+        gap: 18px 10px;
+        margin-top: 22px;
+        padding-left: 28px;
+        font-size: 20px;
+      }
+
+      .summary dt {
+        font-weight: 500;
+      }
+
+      .pi-row {
+        margin-top: 24px;
+        font-size: 20px;
+      }
+
+      .pi-row strong {
+        font-weight: 600;
+      }
+
+      .chip {
+        font-size: 19px;
+        padding: 6px 18px;
+        min-width: 258px;
+        text-align: center;
+      }
+
+      .pi-label {
+        font-size: 20px;
+        margin-top: 18px;
+      }
+
+      .pi-box {
+        padding: 8px 24px;
+        font-size: 26px;
+      }
+
+      .pi-box.va {
+        font-size: 32px;
+      }
+
+      .bank {
+        font-size: 15px;
+        margin: 14px 0 16px 16px;
+      }
+
+      .howto {
+        padding: 12px 36px;
+      }
+
+      .acc-btn {
+        padding: 26px 0;
+        font-size: 26px;
+      }
+
+      .acc-body {
+        padding: 6px 0 18px 24px;
+      }
+
+      .acc-body ol {
+        font-size: 20px;
+        line-height: 1.5;
+      }
+
+      .btn-main {
+        margin-top: 70px;
+        padding: 22px 20px;
+        font-size: 24px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <main class="container page">
+    <a href="webBBO_HOMEPAGE.html" class="logo">Logo</a>
+
+    <!-- breadcrumb -->
+    <nav class="breadcrumb" aria-label="Breadcrumb">
+      <a href="BBOEVENTS.html">BBO Events</a>
+      <span></span>
+      <a href="detail-BBOEVENTS.html">Detail Events</a>
+      <span></span>
+      <a href="buyticket.html">Judul Events</a>
+      <span></span>
+      <strong aria-current="page">Complete Payment</strong>
+    </nav>
+
+    <!-- batas waktu pembayaran -->
+    <div class="countdown">
+      <p class="countdown-title">Complete before</p>
+      <div class="timer" id="timer" role="timer" aria-label="Sisa waktu pembayaran">
+        <span id="tJam">00</span><b>:</b><span id="tMenit">10</span><b>:</b><span id="tDetik">00</span>
+      </div>
+    </div>
+
+    <div class="cols">
+      <h2 class="heading h-summary">Order Summary</h2>
+      <h2 class="heading h-method">Payment Method</h2>
+
+      <!-- order summary -->
+      <section class="box b-summary">
+        <h3 id="sumJudul">Judul Events</h3>
+        <h4>Package Details</h4>
+
+        <dl class="summary">
+          <dt>Categories</dt>
+          <dd id="sumKategori"><span>VIP PACKAGE</span></dd>
+
+          <dt>Ticket Quantity</dt>
+          <dd id="sumQty"><span>1 Pax</span></dd>
+
+          <dt>Total Payment</dt>
+          <dd id="sumTotal"><span>IDR 3,300,000</span></dd>
+
+          <dt class="multi">Personal Info</dt>
+          <dd id="sumPersonal">
+            <span>haloworld</span>
+            <span>haloworld@gmail.com</span>
+            <span>08123456789</span>
+          </dd>
+        </dl>
+      </section>
+
+      <!-- payment instructions -->
+      <section class="box b-method">
+        <h4>Payment Instructions</h4>
+
+        <div class="pi-row">
+          <strong>Complete before</strong>
+          <span class="chip" id="piBatas">Tue, 6 October 16:23:41</span>
+        </div>
+
+        <p class="pi-label">Total Payment</p>
+        <div class="pi-box" id="piTotal">IDR 3,300,000</div>
+
+        <p class="pi-label">Transfer to</p>
+        <div class="bank">
+          <span class="placeholder">Logo</span>
+          <span id="piBank">BCA Virtual Account</span>
+        </div>
+        <div class="pi-box va">
+          <span id="piVa">7777 8888 9999 0000</span>
+          <button type="button" class="btn-copy" id="btnCopy" aria-label="Salin nomor virtual account">
+            <i class="fa-regular fa-copy"></i>
+          </button>
+        </div>
+      </section>
+    </div>
+
+    <!-- how to pay -->
+    <h2 class="heading">How to Pay</h2>
+    <section class="howto">
+          <div class="acc-item">
+            <button type="button" class="acc-btn" aria-expanded="true" aria-controls="acc1">
+              Transfer via ATM <i class="fa-solid fa-chevron-down"></i>
+            </button>
+            <div class="acc-body" id="acc1">
+              <ol>
+              <li>Lorem ipsum dolor sit amet,</li>
+              <li>consectetur adipiscing elit,</li>
+              <li>sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</li>
+              <li>Ut enim ad minim veniam,</li>
+              <li>quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</li>
+              <li>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</li>
+              <li>Excepteur sint occaecat cupidatat non proident,</li>
+              <li>sunt in culpa qui officia deserunt mollit anim id est laborum.</li>
+              </ol>
+            </div>
+          </div>
+          <div class="acc-item">
+            <button type="button" class="acc-btn" aria-expanded="false" aria-controls="acc2">
+              Transfer via Internet Banking <i class="fa-solid fa-chevron-down"></i>
+            </button>
+            <div class="acc-body" id="acc2" hidden>
+              <ol>
+              <li>Lorem ipsum dolor sit amet,</li>
+              <li>consectetur adipiscing elit,</li>
+              <li>sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</li>
+              <li>Ut enim ad minim veniam,</li>
+              <li>quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</li>
+              <li>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</li>
+              <li>Excepteur sint occaecat cupidatat non proident,</li>
+              <li>sunt in culpa qui officia deserunt mollit anim id est laborum.</li>
+              </ol>
+            </div>
+          </div>
+          <div class="acc-item">
+            <button type="button" class="acc-btn" aria-expanded="false" aria-controls="acc3">
+              Transfer via Mobile Banking <i class="fa-solid fa-chevron-down"></i>
+            </button>
+            <div class="acc-body" id="acc3" hidden>
+              <ol>
+              <li>Lorem ipsum dolor sit amet,</li>
+              <li>consectetur adipiscing elit,</li>
+              <li>sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</li>
+              <li>Ut enim ad minim veniam,</li>
+              <li>quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</li>
+              <li>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</li>
+              <li>Excepteur sint occaecat cupidatat non proident,</li>
+              <li>sunt in culpa qui officia deserunt mollit anim id est laborum.</li>
+              </ol>
+            </div>
+          </div>
+    </section>
+
+    <a href="processing.html" class="btn-main" id="btnCheck">Check the payment status</a>
+  </main>
+
+  <script>
+    // ---------- data pesanan (dari halaman buy ticket; kalau kosong pakai contoh di HTML) ----------
+    let order = null;
+    try {
+      order = JSON.parse(sessionStorage.getItem('bbo_order'));
+    } catch (err) {
+      order = null;
+    }
+
+    function formatRupiah(angka) {
+      return 'IDR ' + Number(angka).toLocaleString('en-US');
+    }
+
+    // isi satu <dd> dengan beberapa baris teks (aman dari karakter HTML)
+    function isiBaris(id, daftar) {
+      const el = document.getElementById(id);
+      el.textContent = '';
+      daftar.forEach(function (teks) {
+        const span = document.createElement('span');
+        span.textContent = teks;
+        el.appendChild(span);
+      });
+    }
+
+    if (order && order.tiket && order.tiket.length) {
+      document.getElementById('sumJudul').textContent = order.judul || 'Judul Events';
+
+      isiBaris('sumKategori', order.tiket.map(function (t) { return t.nama; }));
+      isiBaris('sumQty', order.tiket.map(function (t) { return t.qty + ' Pax'; }));
+      isiBaris('sumTotal', [formatRupiah(order.total)]);
+
+      const telepon = String(order.telepon || '').replace(/^0/, '');
+      isiBaris('sumPersonal', [order.nama, order.email, order.kodeNegara + ' ' + telepon]);
+
+      document.getElementById('piTotal').textContent = formatRupiah(order.total);
+      document.getElementById('piBank').textContent = order.metode || 'BCA Virtual Account';
+      document.getElementById('piVa').textContent = order.va || '7777 8888 9999 0000';
+    }
+
+    // ---------- batas waktu & hitung mundur (10 menit) ----------
+    let batas = Number(sessionStorage.getItem('bbo_deadline'));
+    if (!batas) {
+      batas = Date.now() + 10 * 60 * 1000;
+      sessionStorage.setItem('bbo_deadline', String(batas));
+    }
+
+    function dua(n) {
+      return String(n).padStart(2, '0');
+    }
+
+    const hari = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+    const bulan = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+    const tgl = new Date(batas);
+    document.getElementById('piBatas').textContent =
+      hari[tgl.getDay()] + ', ' + tgl.getDate() + ' ' + bulan[tgl.getMonth()] + ' ' +
+      dua(tgl.getHours()) + ':' + dua(tgl.getMinutes()) + ':' + dua(tgl.getSeconds());
+
+    const timer = document.getElementById('timer');
+    const btnCheck = document.getElementById('btnCheck');
+    let hitung;
+
+    function perbaruiWaktu() {
+      const sisa = Math.max(0, Math.floor((batas - Date.now()) / 1000));
+      document.getElementById('tJam').textContent = dua(Math.floor(sisa / 3600));
+      document.getElementById('tMenit').textContent = dua(Math.floor((sisa % 3600) / 60));
+      document.getElementById('tDetik').textContent = dua(sisa % 60);
+
+      if (sisa === 0) {
+        clearInterval(hitung);
+        timer.classList.add('habis');
+        btnCheck.textContent = 'Payment time expired';
+        btnCheck.removeAttribute('href');
+        btnCheck.setAttribute('aria-disabled', 'true');
+        btnCheck.style.pointerEvents = 'none';
+        btnCheck.style.background = '#c9c9c9';
+      }
+    }
+
+    perbaruiWaktu();
+    hitung = setInterval(perbaruiWaktu, 1000);
+
+    // ---------- salin nomor virtual account ----------
+    const btnCopy = document.getElementById('btnCopy');
+
+    btnCopy.addEventListener('click', function () {
+      const nomor = document.getElementById('piVa').textContent.replace(/\s/g, '');
+      const ikon = btnCopy.querySelector('i');
+
+      function berhasil() {
+        ikon.className = 'fa-solid fa-check';
+        setTimeout(function () { ikon.className = 'fa-regular fa-copy'; }, 1500);
+      }
+
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(nomor).then(berhasil);
+      } else {
+        const temp = document.createElement('textarea');
+        temp.value = nomor;
+        document.body.appendChild(temp);
+        temp.select();
+        document.execCommand('copy');
+        document.body.removeChild(temp);
+        berhasil();
+      }
+    });
+
+    // ---------- How to Pay (buka / tutup) ----------
+    document.querySelectorAll('.acc-btn').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        const isi = document.getElementById(btn.getAttribute('aria-controls'));
+        const buka = isi.hidden;
+        isi.hidden = !buka;
+        btn.setAttribute('aria-expanded', buka ? 'true' : 'false');
+      });
+    });
+  </script>
+
+</body>
+</html>
