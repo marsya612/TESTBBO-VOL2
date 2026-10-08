@@ -785,30 +785,40 @@
       z-index: 140;
     }
 
+    /* panel putih menempel sampai dasar layar; jeda ada di area scroll di dalamnya */
     .panel {
       position: fixed;
-      top: 90px;
+      top: 102px;
       bottom: 0;
       left: 16px;
       right: 16px;
       display: flex;
       flex-direction: column;
       background: #fff;
-      padding: 22px 0 0;
-      border-radius: 40px 40px 0 0;
+      padding: 22px 0 28px;
+      border-radius: 30px 30px 0 0;
       z-index: 160;
     }
 
+    /* judul + tombol tutup, sejajar dengan isi di bawahnya */
+    .panel-head {
+      flex: none;
+      width: 90%;
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
     .panel .section-label {
-      align-self: flex-start;
       margin-bottom: 0;
-      padding: 10px 24px 10px 40px;
+      padding: 10px 22px;
+      border-radius: 8px;
     }
 
     .btn-close-all {
-      position: absolute;
-      top: 18px;
-      right: 22px;
+      flex: none;
       width: 40px;
       height: 40px;
       border: 2px solid #000;
@@ -821,7 +831,7 @@
 
     .panel .search {
       flex: none;
-      margin: 24px auto 20px;
+      margin: 20px auto 16px;
     }
 
     .panel .container {
@@ -835,12 +845,12 @@
       flex: none;
     }
 
+    /* area scroll: ada jarak di atas dan bawah, scrollbar tidak menempel ke tepi panel */
     .list-scroll {
       flex: 1;
       min-height: 0;
       overflow-y: auto;
-      padding-right: 14px;
-      padding-bottom: 30px;
+      padding: 8px 14px 24px 0;
       scrollbar-width: thin;
       scrollbar-color: #b3b3b3 #e6e6e6;
     }
@@ -1018,29 +1028,24 @@
 
       /* popup "See All Upcoming Events": 2 kartu per baris */
       .panel {
-        top: 100px;
+        top: 112px;
+        bottom: 0;
         left: 28px;
         right: 28px;
-        padding: 30px 0 0;
-        border-radius: 50px 50px 0 0;
+        padding: 30px 0 40px;
+        border-radius: 40px 40px 0 0;
       }
 
       .panel .section-label {
-        padding: 12px 40px 12px 70px;
-      }
-
-      .btn-close-all {
-        top: 28px;
-        right: 40px;
+        padding: 12px 30px;
       }
 
       .panel .search {
-        margin: 44px auto 36px;
+        margin: 32px auto 26px;
       }
 
       .list-scroll {
-        padding-right: 30px;
-        padding-bottom: 60px;
+        padding: 8px 30px 30px 0;
       }
 
       .panel .month-row {
@@ -1303,8 +1308,10 @@
   <div class="overlay-all" id="overlayAll" hidden></div>
 
   <section class="panel" id="viewUpcomingAll" role="dialog" aria-label="Upcoming Events" hidden>
-    <h2 class="section-label">Upcoming Events</h2>
-    <button class="btn-close-all" id="btnCloseAll" aria-label="Tutup"><i class="fa-solid fa-xmark"></i></button>
+    <div class="panel-head">
+      <h2 class="section-label">Upcoming Events</h2>
+      <button class="btn-close-all" id="btnCloseAll" aria-label="Tutup"><i class="fa-solid fa-xmark"></i></button>
+    </div>
 
     <form class="search" id="searchFormAll" role="search">
       <input type="text" placeholder="Find Your Vibe" aria-label="Cari event">
